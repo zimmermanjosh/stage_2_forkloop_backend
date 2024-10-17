@@ -8,7 +8,8 @@
     "clean_local": "rm -rf node_modules && rm -rf .generated && rm -rf target",
     "prebuild": "npm run clean_local && npm install",
     "permitScripts": "chmod +x scripts/*",
-    "nvmSelect": "npm run permitScripts && sh scripts/nvmSelect.sh"
+    "nvmSelect": "npm run permitScripts && sh scripts/nvmSelect.sh",
+    "lint": "npx eslint ."
   },
   "repository": {
     "type": "git",
@@ -21,11 +22,18 @@
   ],
   "author": "JBZ",
   "license": "ISC",
-  "devDependencies": {
-    "express": "^4.21.1",
-    "nodemon": "^3.1.7"
-  },
   "dependencies": {
-    "npm-check-updates": "^17.1.3"
+    "express": "^4.21.1",
+    "mongoose": "^8.7.1",
+    "nodemon": "^3.1.7",
+    "npm-check-updates": "^17.1.3",
+    "validator": "^13.12.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.1",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.10.0",
+    "eslint-plugin-import": "^2.31.0",
+    "prettier": "^2.8.8"
   }
 }
