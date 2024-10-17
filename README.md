@@ -48,6 +48,8 @@ then
 
 - type : `nvm use`
 
+- for cleanup or issues `npm run prebuild  && npm run nvmSelect`
+
 ### Install project packages
 
 - type : `npm i || npm install`
