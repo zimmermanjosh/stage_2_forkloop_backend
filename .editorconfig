@@ -1,8 +1,7 @@
 # http://editorconfig.org
 
-# A special property that should be specified at the very top of the file.
-# When set to true, it stops Editorconfig from searching any higher
-# in the directory tree for .editorconfig files.
+# A special property that should be specified at the top of the file outside of
+# any sections. Set to true to stop .editorconfig file search on current file
 root = true
 
 [*]
@@ -14,7 +13,7 @@ indent_style = space
 # Possible values - an integer, tab
 indent_size = 2
 
-# Newline character(s) to use (varies by OS otherwise)
+# Line ending character
 # Possible values - lf, crlf, cr
 end_of_line = lf
 
@@ -26,6 +25,7 @@ charset = utf-8
 # Possible values - true, false
 trim_trailing_whitespace = true
 
+# Disable for Markdown because trailing whitespace is significant
 [*.md]
 trim_trailing_whitespace = false
 

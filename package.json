@@ -1,0 +1,28 @@
+{
+  "name": "se_project_express",
+  "version": "0.0.1",
+  "description": "MERN Stack project sprint 12 project 12 node express",
+  "main": "app.js",
+  "scripts": {
+    "test": "hello world",
+    "clean_local": "rm -rf node_modules && rm -rf .generated && rm -rf target",
+    "prebuild": "npm run clean_local && npm install",
+    "permitScripts": "chmod +x scripts/*",
+    "nvmSelect": "npm run permitScripts && sh scripts/nvmSelect.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zimmermanjosh/se_project_express.git"
+  },
+  "keywords": [
+    "SE",
+    "Project",
+    "express"
+  ],
+  "author": "JBZ",
+  "license": "ISC",
+  "devDependencies": {
+    "express": "^4.21.1",
+    "nodemon": "^3.1.7"
+  }
+}
