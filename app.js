@@ -2,9 +2,11 @@
 
 const express = require("express");
 const mongoose  = require("mongoose");
+const indexRouter = require("./routes/index");
 
 const { PORT = 3001, BASE_PATH = "http://localhost" } = process.env;
 const app = express();
+
 
 // Connecting to MongoDB
 mongoose
@@ -14,19 +16,9 @@ mongoose
   })
   .catch((err) => console.error(err));
 
+  // Middleware
+  app.use("/", indexRouter);
 
-// const
-// req.user = {
-//  _id: "5d8b8592978f8bd833ca8133"
-// };
-
-// functions
-
-// middleware
-
-// routes
-
-// main
 
 app.listen(PORT, () => {
   console.log("Link to the server");
