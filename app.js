@@ -1,24 +1,26 @@
 // Importing necessary modules
 
 const express = require("express");
-const mongoose  = require("mongoose");
+const mongoose = require("mongoose");
 const indexRouter = require("./routes/index");
 
 const { PORT = 3001, BASE_PATH = "http://localhost" } = process.env;
 const app = express();
 
+const routes = require("./routes");
 
 // Connecting to MongoDB
 mongoose
-  .connect('mongodb://127.0.0.1:27017/wtwr_db')
+  .connect("mongodb://127.0.0.1:27017/wtwr_db")
   .then(() => {
-    console.log("Connected to MongoDB")
+    console.log("Connected to MongoDB");
   })
   .catch((err) => console.error(err));
 
-  // Middleware
-  app.use("/", indexRouter);
-
+// Middleware
+app.use(express.json());
+app.use("/", indexRouter);
+app.use(routes);
 
 app.listen(PORT, () => {
   console.log("Link to the server");

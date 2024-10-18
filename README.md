@@ -78,3 +78,7 @@ Before committing your code, make sure you edit the file `sprint.txt` in the roo
 ├── sprint.txt
 └── version.js
 ```
+
+## feature attention
+
+- 2024 10 18 - part 6 controller add
