@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 // Importing necessary modules
 
 const express = require("express");

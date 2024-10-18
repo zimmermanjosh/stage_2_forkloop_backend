@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 const router = require("express").Router();
 
 router.get("/", () => console.log("GET /users"));
