@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
-
-const ClothingItem = require("../models/ClothingItem");
+const ClothingItem = require("../models/clothingItem");
 
 const createItem = (req, res) => {
   console.log(req);
