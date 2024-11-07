@@ -2,7 +2,6 @@
 
 The back-end project is focused on creating a server for the WTWR application. You’ll gain a deeper understanding of how to work with databases, set up security and testing, and deploy web applications on a remote machine. The eventual goal is to create a server with an API and user authorization.
 
-
 ## software to install
 
 - nvm
@@ -18,7 +17,7 @@ The back-end project is focused on creating a server for the WTWR application. Y
 
 open a terminal and copy below and paste the following
 
-```
+``` zsh
   export NVM_DIR="$HOME/.nvm"
   [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
   [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
@@ -68,7 +67,7 @@ Before committing your code, make sure you edit the file `sprint.txt` in the roo
 
 ### Component Structure
 
-```
+```list
 ├── README.md
 ├── package-lock.json
 ├── package.json
@@ -78,3 +77,9 @@ Before committing your code, make sure you edit the file `sprint.txt` in the roo
 ├── sprint.txt
 └── version.js
 ```
+
+## feature attention
+
+  - 2024 10 18 - part 6 controller add
+
+  - 2024 11 03 - part 6 conntroler clean up and add

@@ -1,6 +1,6 @@
 {
   "name": "se_project_express",
-  "version": "0.0.1",
+  "version": "1.0.2",
   "description": "MERN Stack project sprint 12 project 12 node express",
   "main": "app.js",
   "scripts": {
