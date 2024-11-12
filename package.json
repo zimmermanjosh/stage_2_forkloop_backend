@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "test": "hello world",
-    "clean_local": "rm -rf node_modules && rm -rf .generated && rm -rf target",
+    "clean_local": "rm -rf node_modules && rm -rf .generated && rm -rf target && rm -rf package-lock.json",
     "prebuild": "npm run clean_local && npm install",
     "permitScripts": "chmod +x scripts/*",
     "nvmSelect": "npm run permitScripts && sh scripts/nvmSelect.sh",

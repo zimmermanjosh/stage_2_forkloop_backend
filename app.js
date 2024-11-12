@@ -23,6 +23,16 @@ app.use(express.json());
 app.use("/", indexRouter);
 app.use(routes);
 
+app.use((req, res, next) => {
+  req.user = {
+    "_id": "6733c42413cc05a235e5feff"// paste the _id of the test user created in the previous step
+  };
+  next();
+});
+
+
+
+// Starting the server
 app.listen(PORT, () => {
   console.log("Link to the server");
   console.log(BASE_PATH);
