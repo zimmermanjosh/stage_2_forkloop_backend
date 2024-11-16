@@ -1,61 +1,117 @@
 /* eslint-disable no-console */
 const ClothingItem = require("../models/clothingItem");
+const { ERROR_CODES, ERROR_MESSAGES } = require("../utils/util");
 
+// Centralized error handler
+const handleError = (err, res) => {
+  console.error(err); // Log the error for debugging
+
+  if (err.name === "ValidationError") {
+    return res
+      .status(ERROR_CODES.BAD_REQUEST)
+      .send({ message: ERROR_MESSAGES.BAD_REQUEST });
+  }
+
+  if (err.name === "DocumentNotFoundError") {
+    return res
+      .status(ERROR_CODES.NOT_FOUND)
+      .send({ message: ERROR_MESSAGES.NOT_FOUND });
+  }
+
+  // Default server error
+  return res
+    .status(ERROR_CODES.SERVER_ERROR)
+    .send({ message: ERROR_MESSAGES.SERVER_ERROR });
+};
+
+// Create a clothing item
 const createItem = (req, res) => {
-  console.log(req);
-  console.log(req.body);
-
   const { name, weather, imageUrl } = req.body;
+
+  if (!name || !weather || !imageUrl) {
+    return res
+      .status(ERROR_CODES.BAD_REQUEST)
+      .send({ message: ERROR_MESSAGES.BAD_REQUEST });
+  }
 
   ClothingItem.create({ name, weather, imageUrl })
     .then((item) => {
       console.log("Item created successfully", item);
-      res.send({ data: item });
+      res.status(201).send({ data: item });
     })
-    .catch((err) => {
-      res.status(400).send({ message: "Server error in createItem.", err });
-    });
+    .catch((err) => handleError(err, res));
+
+  return {};
 };
 
+// Get all clothing items
 const getItems = (req, res) => {
-  console.log(req);
-  console.log(req.body);
-
   ClothingItem.find({})
     .then((items) => {
-      console.log("GET Item successfully", items);
-      res.send(200).send(items);
+      console.log("Items fetched successfully", items);
+      res.status(200).send({ data: items });
     })
-    .catch((err) => {
-      res.status(500).send({ message: "server error in getItems.", err });
-    });
+    .catch((err) => handleError(err, res));
 };
 
+// Update a clothing item
 const updateItem = (req, res) => {
   const { itemId } = req.params;
-  const { imageURL } = req.body;
+  const { imageUrl } = req.body;
 
-  console.log(itemId, imageURL);
+  if (!imageUrl) {
+    return res
+      .status(ERROR_CODES.BAD_REQUEST)
+      .send({ message: ERROR_MESSAGES.BAD_REQUEST });
+  }
 
-  ClothingItem.findByIdAndUpdate(itemId, { $set: { imageURL } })
-    .orFail()
-    .then((items) => res.send(200).send({ data: items }))
-    .catch((err) => {
-      res.status(500).send({ message: "server error in updateItem.", err });
-    });
+  ClothingItem.findByIdAndUpdate(
+    itemId,
+    { $set: { imageUrl } },
+    { new: true, runValidators: true }
+  )
+    .orFail(new Error("DocumentNotFoundError"))
+    .then((item) => res.status(200).send({ data: item }))
+    .catch((err) => handleError(err, res));
+  return {};
 };
 
+// Delete a clothing item
 const deleteItem = (req, res) => {
   const { itemId } = req.params;
 
-  console.log(itemId);
-
   ClothingItem.findByIdAndDelete(itemId)
-    .orFail()
-    .then(() => res.send(204).send({}))
-    .catch((err) => {
-      res.status(500).send({ message: "server error in deleteItem.", err });
-    });
+    .orFail(new Error("DocumentNotFoundError"))
+    .then(() => res.status(204).send()) // No content for successful deletion
+    .catch((err) => handleError(err, res));
+};
+
+// Like a clothing item
+const likeItem = (req, res) => {
+  const { itemId } = req.params;
+
+  ClothingItem.findByIdAndUpdate(
+    itemId,
+    { $addToSet: { likes: req.user._id } }, // Add user ID if not already in likes array
+    { new: true }
+  )
+    .orFail(new Error("DocumentNotFoundError"))
+    .then((item) => res.status(200).send({ data: item }))
+    .catch((err) => handleError(err, res));
+};
+
+// Dislike a clothing item
+const dislikeItem = (req, res) => {
+  const { itemId } = req.params;
+
+  ClothingItem.findByIdAndUpdate(
+    itemId,
+    { $pull: { likes: req.user._id } }, // Remove user ID from likes array
+    { new: true }
+  )
+    .orFail(new Error("DocumentNotFoundError"))
+    .then((item) => res.status(200).send({ data: item }))
+    .catch((err) => handleError(err, res));
 };
 
 module.exports = {
@@ -63,4 +119,6 @@ module.exports = {
   getItems,
   updateItem,
   deleteItem,
+  likeItem,
+  dislikeItem,
 };
