@@ -30,7 +30,7 @@ app.post("/clothing", (req, res) => {
 
 app.use((req, res, next) => {
   req.user = {
-    _id: "6733c42413cc05a235e5feff", // paste the _id of the test user created in the previous step
+    //_id: "6733c42413cc05a235e5feff11", // paste the _id of the test user created in the previous step
   };
   next();
 });
