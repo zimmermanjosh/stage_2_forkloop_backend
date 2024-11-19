@@ -4,24 +4,17 @@ const { ERROR_CODES, ERROR_MESSAGES } = require("../utils/util");
 
 // Centralized error handler
 const handleError = (err, res) => {
-  console.error(err); // Log the error for debugging
-
+  console.error(err);
   if (err.name === "ValidationError") {
-    return res
-      .status(ERROR_CODES.BAD_REQUEST)
-      .send({ message: ERROR_MESSAGES.BAD_REQUEST });
+    return res.status(400).send({ message: "Validation failed." });
   }
-
+  if (err.name === "CastError") {
+    return res.status(400).send({ message: "Invalid ID format." });
+  }
   if (err.name === "DocumentNotFoundError") {
-    return res
-      .status(ERROR_CODES.NOT_FOUND)
-      .send({ message: ERROR_MESSAGES.NOT_FOUND });
+    return res.status(404).send({ message: "Document not found." });
   }
-
-  // Default server error
-  return res
-    .status(ERROR_CODES.SERVER_ERROR)
-    .send({ message: ERROR_MESSAGES.SERVER_ERROR });
+  return res.status(500).send({ message: "Internal server error." });
 };
 
 // Create a clothing item
