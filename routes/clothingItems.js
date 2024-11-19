@@ -17,11 +17,11 @@ router.post("/", createItem);
 router.get("/", getItems);
 // UPDATE
 router.put("/:itemId", updateItem);
-router.put("/item/:itemId/likes", likeItem);
+router.put("/items/:itemId/likes", likeItem);
 // delete
 
 router.delete("/items/:itemId", deleteItem);
 
-router.delete("/item/:itemId/likes", dislikeItem);
+router.delete("/items/:itemId/likes", dislikeItem);
 
 module.exports = router;
