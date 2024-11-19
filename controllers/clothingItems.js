@@ -35,20 +35,17 @@ const createItem = (req, res) => {
       .status(ERROR_CODES.BAD_REQUEST)
       .send({ message: "Missing required fields: name, weather, imageURL." });
   }
-  // Add a comment to disregard the 'consistent-return' error
-  // eslint-disable-next-line consistent-return
-  ClothingItem.create({ name, weather, imageURL })
+
+  return ClothingItem.create({ name, weather, imageURL }) // Explicitly return here
     .then((item) => {
       console.log("Item created successfully:", item); // Debug log
-      res.status(201).send({ data: item });
+      return res.status(201).send({ data: item }); // Explicitly return here
     })
     .catch((err) => {
       console.error("Error during creation:", err); // Debug log
 
       if (err.name === "ValidationError") {
         return res.status(400).send({ message: err.message });
-        // .status(ERROR_CODES.BAD_REQUEST)
-        // .send({ message: ERROR_MESSAGES.BAD_REQUEST });
       }
 
       return res
