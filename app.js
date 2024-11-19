@@ -4,6 +4,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const indexRouter = require("./routes/index");
+const clothingItemRoutes = require("./routes/clothingItems");
 
 const { PORT = 3001, BASE_PATH = "http://localhost" } = process.env;
 const app = express();
@@ -22,6 +23,7 @@ mongoose
 app.use(express.json());
 app.use("/", indexRouter);
 app.use(routes);
+app.use("/items", clothingItemRoutes);
 
 app.post("/clothing", (req, res) => {
   console.log(req.user._id); // _id will become accessible

@@ -26,22 +26,34 @@ const handleError = (err, res) => {
 
 // Create a clothing item
 const createItem = (req, res) => {
-  const { name, weather, imageUrl } = req.body;
+  const { name, weather, imageURL } = req.body;
 
-  if (!name || !weather || !imageUrl) {
+  // Validate input fields
+  if (!name || !weather || !imageURL) {
+    console.log("Validation failed:", req.body); // Debug log
     return res
       .status(ERROR_CODES.BAD_REQUEST)
-      .send({ message: ERROR_MESSAGES.BAD_REQUEST });
+      .send({ message: "Missing required fields: name, weather, imageURL." });
   }
 
-  ClothingItem.create({ name, weather, imageUrl })
+  ClothingItem.create({ name, weather, imageURL })
     .then((item) => {
-      console.log("Item created successfully", item);
+      console.log("Item created successfully:", item); // Debug log
       res.status(201).send({ data: item });
     })
-    .catch((err) => handleError(err, res));
+    .catch((err) => {
+      console.error("Error during creation:", err); // Debug log
 
-  return {};
+      if (err.name === "ValidationError") {
+        return res.status(400).send({ message: err.message });
+        //.status(ERROR_CODES.BAD_REQUEST)
+        //.send({ message: ERROR_MESSAGES.BAD_REQUEST });
+      }
+
+      return res
+        .status(ERROR_CODES.SERVER_ERROR)
+        .send({ message: ERROR_MESSAGES.SERVER_ERROR });
+    });
 };
 
 // Get all clothing items
@@ -67,7 +79,7 @@ const updateItem = (req, res) => {
 
   ClothingItem.findByIdAndUpdate(
     itemId,
-    { $set: { imageUrl } },
+    { $set: { imageURL } },
     { new: true, runValidators: true }
   )
     .orFail(new Error("DocumentNotFoundError"))
@@ -81,9 +93,31 @@ const deleteItem = (req, res) => {
   const { itemId } = req.params;
 
   ClothingItem.findByIdAndDelete(itemId)
-    .orFail(new Error("DocumentNotFoundError"))
+    .orFail(() => {
+      const error = new Error("DocumentNotFoundError");
+      error.name = "DocumentNotFoundError";
+      throw error;
+    })
     .then(() => res.status(204).send()) // No content for successful deletion
-    .catch((err) => handleError(err, res));
+    .catch((err) => {
+      console.error("Error during item deletion:", err); // Log the error for debugging
+
+      if (err.name === "DocumentNotFoundError") {
+        return res
+          .status(ERROR_CODES.NOT_FOUND)
+          .send({ message: ERROR_MESSAGES.NOT_FOUND });
+      }
+
+      if (err.name === "CastError") {
+        return res
+          .status(ERROR_CODES.BAD_REQUEST)
+          .send({ message: "Invalid ID format." });
+      }
+
+      return res
+        .status(ERROR_CODES.SERVER_ERROR)
+        .send({ message: ERROR_MESSAGES.SERVER_ERROR });
+    });
 };
 
 // Like a clothing item
