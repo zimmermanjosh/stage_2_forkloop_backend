@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 const ClothingItem = require("../models/clothingItem");
 const { ERROR_CODES, ERROR_MESSAGES } = require("../utils/util");
 
@@ -19,17 +18,17 @@ const handleError = (err, res) => {
 
 // Create a clothing item
 const createItem = (req, res) => {
-  const { name, weather, imageURL } = req.body;
+  const { name, weather, imageUrl } = req.body;
 
   // Validate input fields
-  if (!name || !weather || !imageURL) {
+  if (!name || !weather || !imageUrl) {
     console.log("Validation failed:", req.body); // Debug log
     return res
       .status(ERROR_CODES.BAD_REQUEST)
-      .send({ message: "Missing required fields: name, weather, imageURL." });
+      .send({ message: "Missing required fields: name, weather, imageUrl." });
   }
 
-  return ClothingItem.create({ name, weather, imageURL, owner: req.user._id }) // Explicitly return here
+  return ClothingItem.create({ name, weather, imageUrl, owner: req.user._id }) // Explicitly return here
     .then((item) => {
       console.log("Item created successfully:", item); // Debug log
       return res.status(201).send({ data: item }); // Explicitly return here
@@ -60,9 +59,9 @@ const getItems = (req, res) => {
 // Update a clothing item
 const updateItem = (req, res) => {
   const { itemId } = req.params;
-  const { imageURL } = req.body;
+  const { imageUrl } = req.body;
 
-  if (!imageURL) {
+  if (!imageUrl) {
     return res
       .status(ERROR_CODES.BAD_REQUEST)
       .send({ message: ERROR_MESSAGES.BAD_REQUEST });
@@ -70,7 +69,7 @@ const updateItem = (req, res) => {
 
   ClothingItem.findByIdAndUpdate(
     itemId,
-    { $set: { imageURL } },
+    { $set: { imageUrl } },
     { new: true, runValidators: true }
   )
     .orFail(new Error("DocumentNotFoundError"))
