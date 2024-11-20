@@ -18,10 +18,12 @@ const handleError = (err, res) => {
 
 // Create a clothing item
 const createItem = (req, res) => {
-  const { name, weather, imageUrl } = req.body;
+  const { name, weather, imageUrl  } = req.body;
+  // inside createItem
+  const owner = req.user._id;
 
   // Validate input fields
-  if (!name || !weather || !imageUrl) {
+  if (!name || !weather || !imageUrl || owner) {
     console.log("Validation failed:", req.body); // Debug log
     return res
       .status(ERROR_CODES.BAD_REQUEST)
