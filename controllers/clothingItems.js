@@ -29,7 +29,7 @@ const createItem = (req, res) => {
       .send({ message: "Missing required fields: name, weather, imageURL." });
   }
 
-  return ClothingItem.create({ name, weather, imageURL }) // Explicitly return here
+  return ClothingItem.create({ name, weather, imageURL, owner: req.user._id }) // Explicitly return here
     .then((item) => {
       console.log("Item created successfully:", item); // Debug log
       return res.status(201).send({ data: item }); // Explicitly return here
