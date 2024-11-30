@@ -1,47 +1,51 @@
-/* eslint-disable no-console */
 const ClothingItem = require("../models/clothingItem");
 const { ERROR_CODES, ERROR_MESSAGES } = require("../utils/util");
 
 // Centralized error handler
 const handleError = (err, res) => {
-  console.error(err); // Log the error for debugging
-
+  console.error(err);
   if (err.name === "ValidationError") {
-    return res
-      .status(ERROR_CODES.BAD_REQUEST)
-      .send({ message: ERROR_MESSAGES.BAD_REQUEST });
+    return res.status(400).send({ message: "Validation failed." });
   }
-
+  if (err.name === "CastError") {
+    return res.status(400).send({ message: "Invalid ID format." });
+  }
   if (err.name === "DocumentNotFoundError") {
-    return res
-      .status(ERROR_CODES.NOT_FOUND)
-      .send({ message: ERROR_MESSAGES.NOT_FOUND });
+    return res.status(404).send({ message: "Document not found." });
   }
-
-  // Default server error
-  return res
-    .status(ERROR_CODES.SERVER_ERROR)
-    .send({ message: ERROR_MESSAGES.SERVER_ERROR });
+  return res.status(500).send({ message: "Internal server error." });
 };
 
 // Create a clothing item
 const createItem = (req, res) => {
-  const { name, weather, imageUrl } = req.body;
+  const { name, weather, imageUrl  } = req.body;
+  // inside createItem
+  const owner = req.user._id;
 
-  if (!name || !weather || !imageUrl) {
+  // Validate input fields
+  if (!name || !weather || !imageUrl || owner) {
+    console.log("Validation failed:", req.body); // Debug log
     return res
       .status(ERROR_CODES.BAD_REQUEST)
-      .send({ message: ERROR_MESSAGES.BAD_REQUEST });
+      .send({ message: "Missing required fields: name, weather, imageUrl." });
   }
 
-  ClothingItem.create({ name, weather, imageUrl })
+  return ClothingItem.create({ name, weather, imageUrl, owner: req.user._id }) // Explicitly return here
     .then((item) => {
-      console.log("Item created successfully", item);
-      res.status(201).send({ data: item });
+      console.log("Item created successfully:", item); // Debug log
+      return res.status(201).send({ data: item }); // Explicitly return here
     })
-    .catch((err) => handleError(err, res));
+    .catch((err) => {
+      console.error("Error during creation:", err); // Debug log
 
-  return {};
+      if (err.name === "ValidationError") {
+        return res.status(400).send({ message: err.message });
+      }
+
+      return res
+        .status(ERROR_CODES.SERVER_ERROR)
+        .send({ message: ERROR_MESSAGES.SERVER_ERROR });
+    });
 };
 
 // Get all clothing items
@@ -81,9 +85,31 @@ const deleteItem = (req, res) => {
   const { itemId } = req.params;
 
   ClothingItem.findByIdAndDelete(itemId)
-    .orFail(new Error("DocumentNotFoundError"))
+    .orFail(() => {
+      const error = new Error("DocumentNotFoundError");
+      error.name = "DocumentNotFoundError";
+      throw error;
+    })
     .then(() => res.status(204).send()) // No content for successful deletion
-    .catch((err) => handleError(err, res));
+    .catch((err) => {
+      console.error("Error during item deletion:", err); // Log the error for debugging
+
+      if (err.name === "DocumentNotFoundError") {
+        return res
+          .status(ERROR_CODES.NOT_FOUND)
+          .send({ message: ERROR_MESSAGES.NOT_FOUND });
+      }
+
+      if (err.name === "CastError") {
+        return res
+          .status(ERROR_CODES.BAD_REQUEST)
+          .send({ message: "Invalid ID format." });
+      }
+
+      return res
+        .status(ERROR_CODES.SERVER_ERROR)
+        .send({ message: ERROR_MESSAGES.SERVER_ERROR });
+    });
 };
 
 // Like a clothing item
