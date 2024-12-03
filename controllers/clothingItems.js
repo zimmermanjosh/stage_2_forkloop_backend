@@ -4,6 +4,7 @@ const { ERROR_CODES, ERROR_MESSAGES } = require("../utils/util");
 // Centralized error handler
 const handleError = (err, res) => {
   console.error(err);
+  console.error(err.name);
   if (err.name === "ValidationError") {
     return res.status(400).send({ message: "Validation failed." });
   }
@@ -18,16 +19,16 @@ const handleError = (err, res) => {
 
 // Create a clothing item
 const createItem = (req, res) => {
-  const { name, weather, imageUrl  } = req.body;
+  const { name, weather, imageUrl } = req.body;
   // inside createItem
   const owner = req.user._id;
 
   // Validate input fields
-  if (!name || !weather || !imageUrl || owner) {
-    console.log("Validation failed:", req.body); // Debug log
+  if (!name || !weather || !imageUrl || !owner) {
+    console.log("Validation failed:", req.body, owner); // Debug log
     return res
       .status(ERROR_CODES.BAD_REQUEST)
-      .send({ message: "Missing required fields: name, weather, imageUrl." });
+      .send({ message: "Missing required fields: name, weather, imageUrl" });
   }
 
   return ClothingItem.create({ name, weather, imageUrl, owner: req.user._id }) // Explicitly return here
@@ -121,7 +122,7 @@ const likeItem = (req, res) => {
     { $addToSet: { likes: req.user._id } }, // Add user ID if not already in likes array
     { new: true }
   )
-    .orFail(new Error("DocumentNotFoundError"))
+    .orFail()
     .then((item) => res.status(200).send({ data: item }))
     .catch((err) => handleError(err, res));
 };

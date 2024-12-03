@@ -5,7 +5,7 @@ const clothingItem = require("./clothingItems");
 router.use("/users", userRouter);
 router.use("/items", clothingItem);
 router.use((req, res) => {
-  res.status(500).send({ message: "Invalid route. Router not found" });
+  res.status(404).send({ message: "Path Doesn't Exist" });
 });
 
 module.exports = router;
