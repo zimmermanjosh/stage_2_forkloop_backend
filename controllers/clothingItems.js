@@ -61,28 +61,6 @@ const getItems = (req, res) => {
     .catch((err) => handleError(err, res));
 };
 
-// Update a clothing item
-const updateItem = (req, res) => {
-  const { itemId } = req.params;
-  const { imageUrl } = req.body;
-
-  if (!imageUrl) {
-    return res
-      .status(ERROR_CODES.BAD_REQUEST)
-      .send({ message: ERROR_MESSAGES.BAD_REQUEST });
-  }
-
-  ClothingItem.findByIdAndUpdate(
-    itemId,
-    { $set: { imageUrl } },
-    { new: true, runValidators: true }
-  )
-    .orFail()
-    .then((item) => res.status(200).send({ data: item }))
-    .catch((err) => handleError(err, res));
-  return {};
-};
-
 // Delete a clothing item
 const deleteItem = (req, res) => {
   const { itemId } = req.params;
