@@ -7,8 +7,7 @@ const ERROR_CODES = {
 const ERROR_MESSAGES = {
   BAD_REQUEST: "This is a Bad Request data syntax or operation is incorrect.",
   NOT_FOUND: "Resource(s) not found.",
-  SERVER_ERROR:
-    "An error has occurred on the server. Doesn't exist or couldn't be processed.",
+  SERVER_ERROR: "Internal server error.",
 };
 
 module.exports = { ERROR_CODES, ERROR_MESSAGES };

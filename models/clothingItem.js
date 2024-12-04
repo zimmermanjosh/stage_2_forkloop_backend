@@ -7,7 +7,7 @@ const clothingItemSchema = new mongoose.Schema({
     type: String,
     required: true,
     minlength: 2,
-    max_length: 30,
+    maxlength: 30,
   },
   weather: {
     type: String,

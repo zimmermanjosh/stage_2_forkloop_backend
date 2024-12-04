@@ -4,6 +4,7 @@ const { ERROR_CODES, ERROR_MESSAGES } = require("../utils/util");
 // Centralized error handler
 const handleError = (err, res) => {
   console.error(err);
+  // console.error(err.name);
   if (err.name === "ValidationError") {
     return res.status(400).send({ message: "Validation failed." });
   }
@@ -18,16 +19,16 @@ const handleError = (err, res) => {
 
 // Create a clothing item
 const createItem = (req, res) => {
-  const { name, weather, imageUrl  } = req.body;
+  const { name, weather, imageUrl } = req.body;
   // inside createItem
   const owner = req.user._id;
 
   // Validate input fields
-  if (!name || !weather || !imageUrl || owner) {
-    console.log("Validation failed:", req.body); // Debug log
+  if (!name || !weather || !imageUrl || !owner) {
+    console.log("Validation failed:", req.body, owner); // Debug log
     return res
       .status(ERROR_CODES.BAD_REQUEST)
-      .send({ message: "Missing required fields: name, weather, imageUrl." });
+      .send({ message: "Missing required fields: name, weather, imageUrl" });
   }
 
   return ClothingItem.create({ name, weather, imageUrl, owner: req.user._id }) // Explicitly return here
@@ -74,7 +75,7 @@ const updateItem = (req, res) => {
     { $set: { imageUrl } },
     { new: true, runValidators: true }
   )
-    .orFail(new Error("DocumentNotFoundError"))
+    .orFail()
     .then((item) => res.status(200).send({ data: item }))
     .catch((err) => handleError(err, res));
   return {};
@@ -90,7 +91,7 @@ const deleteItem = (req, res) => {
       error.name = "DocumentNotFoundError";
       throw error;
     })
-    .then(() => res.status(204).send()) // No content for successful deletion
+    .then(() => res.status(200).send({})) // No content for successful deletion
     .catch((err) => {
       console.error("Error during item deletion:", err); // Log the error for debugging
 
@@ -121,7 +122,7 @@ const likeItem = (req, res) => {
     { $addToSet: { likes: req.user._id } }, // Add user ID if not already in likes array
     { new: true }
   )
-    .orFail(new Error("DocumentNotFoundError"))
+    .orFail()
     .then((item) => res.status(200).send({ data: item }))
     .catch((err) => handleError(err, res));
 };
@@ -135,7 +136,7 @@ const dislikeItem = (req, res) => {
     { $pull: { likes: req.user._id } }, // Remove user ID from likes array
     { new: true }
   )
-    .orFail(new Error("DocumentNotFoundError"))
+    .orFail()
     .then((item) => res.status(200).send({ data: item }))
     .catch((err) => handleError(err, res));
 };
