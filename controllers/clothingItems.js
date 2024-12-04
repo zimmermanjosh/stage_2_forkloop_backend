@@ -4,7 +4,7 @@ const { ERROR_CODES, ERROR_MESSAGES } = require("../utils/util");
 // Centralized error handler
 const handleError = (err, res) => {
   console.error(err);
-  //console.error(err.name);
+  // console.error(err.name);
   if (err.name === "ValidationError") {
     return res.status(400).send({ message: "Validation failed." });
   }
