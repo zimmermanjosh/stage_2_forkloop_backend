@@ -4,7 +4,7 @@ const { ERROR_CODES, ERROR_MESSAGES } = require("../utils/util");
 // Centralized error handler
 const handleError = (err, res) => {
   console.error(err);
-  console.error(err.name);
+  //console.error(err.name);
   if (err.name === "ValidationError") {
     return res.status(400).send({ message: "Validation failed." });
   }
@@ -91,7 +91,7 @@ const deleteItem = (req, res) => {
       error.name = "DocumentNotFoundError";
       throw error;
     })
-    .then(() => res.status(204).send()) // No content for successful deletion
+    .then(() => res.status(200).send({})) // No content for successful deletion
     .catch((err) => {
       console.error("Error during item deletion:", err); // Log the error for debugging
 
