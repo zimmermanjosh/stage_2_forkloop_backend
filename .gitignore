@@ -41,5 +41,4 @@ node_modules
 .idea
 .vscode
 test
-*.txt
 .trunk
