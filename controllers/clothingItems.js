@@ -46,14 +46,6 @@ const createItem = (req, res) => {
     .catch((err) => {
       console.error("Error during creation:", err); // Debug log
 
-      if (err.name === "ValidationError") {
-        return res.status(400).send({ message: err.message });
-      }
-
-      // return res
-      // .status(ERROR_CODES.SERVER_ERROR)
-      // .send({ message: ERROR_MESSAGES.SERVER_ERROR });
-
       return handleError(err, res);
     });
 };
