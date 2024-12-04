@@ -43,9 +43,11 @@ const createItem = (req, res) => {
         return res.status(400).send({ message: err.message });
       }
 
-      return res
-        .status(ERROR_CODES.SERVER_ERROR)
-        .send({ message: ERROR_MESSAGES.SERVER_ERROR });
+      // return res
+      // .status(ERROR_CODES.SERVER_ERROR)
+      // .send({ message: ERROR_MESSAGES.SERVER_ERROR });
+
+      return handleError(err, res);
     });
 };
 

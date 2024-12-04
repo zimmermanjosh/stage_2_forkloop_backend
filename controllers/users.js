@@ -34,7 +34,14 @@ const createUser = (req, res) => {
 
   User.create({ name, avatar })
     .then((user) => res.status(201).send(user))
-    .catch((err) => handleError(err, res));
+    .catch((err) => {
+      if (err.name === "ValidationError") {
+        return res
+          .status(ERROR_CODES.BAD_REQUEST)
+          .send({ message: ERROR_MESSAGES.BAD_REQUEST });
+      }
+      return handleError(err, res);
+    });
 };
 
 const getUser = (req, res) => {
@@ -46,7 +53,7 @@ const getUser = (req, res) => {
     .catch((err) => {
       if (err.message === "DocumentNotFoundError") {
         return res
-          .status(ERROR_CODES.BAD_REQUEST)
+          .status(ERROR_CODES.NOT_FOUND)
           .send({ message: "User not found" });
       }
       return handleError(err, res);
