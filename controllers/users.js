@@ -51,6 +51,11 @@ const getUser = (req, res) => {
     .orFail(new Error("DocumentNotFoundError"))
     .then((user) => res.status(200).send(user))
     .catch((err) => {
+      if (err.name === "CastError") {
+        return res
+          .status(ERROR_CODES.BAD_REQUEST)
+          .send({ message: "Invalid ID format." });
+      }
       if (err.message === "DocumentNotFoundError") {
         return res
           .status(ERROR_CODES.NOT_FOUND)
