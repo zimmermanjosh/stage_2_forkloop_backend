@@ -10,7 +10,8 @@
     "permitScripts": "chmod +x scripts/*",
     "nvmSelect": "npm run permitScripts && sh scripts/nvmSelect.sh",
     "lint": "npx eslint .",
-    "start": "nodemon app.js"
+    "start": "node app.js",
+    "dev": "nodemon app.js"
   },
   "repository": {
     "type": "git",

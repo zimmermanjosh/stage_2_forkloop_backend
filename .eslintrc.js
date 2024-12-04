@@ -21,6 +21,6 @@ module.exports = {
   },
 
   rules: {
-    "no-underscore-dangle": ["error", { allow: ["id", "_id"] }],
+    "no-underscore-dangle": ["error", { allow: ["_id"] }],
   },
 };
