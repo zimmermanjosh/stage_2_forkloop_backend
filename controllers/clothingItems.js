@@ -3,7 +3,7 @@ const { ERROR_CODES, ERROR_MESSAGES } = require("../utils/util");
 
 // Centralized error handler
 const handleError = (err, res) => {
-  console.error(err);
+  // console.error(err);
   // console.error(err.name);
   if (err.name === "ValidationError") {
     return res.status(400).send({ message: "Validation failed." });
@@ -25,7 +25,7 @@ const createItem = (req, res) => {
 
   // Validate input fields
   if (!name || !weather || !imageUrl || !owner) {
-    console.log("Validation failed:", req.body, owner); // Debug log
+    // console.log("Validation failed:", req.body, owner); // Debug log
     return res
       .status(ERROR_CODES.BAD_REQUEST)
       .send({ message: "Missing required fields: name, weather, imageUrl" });
@@ -34,6 +34,7 @@ const createItem = (req, res) => {
   return ClothingItem.create({ name, weather, imageUrl, owner: req.user._id }) // Explicitly return here
     .then((item) => {
       console.log("Item created successfully:", item); // Debug log
+
       return res.status(201).send({ data: item }); // Explicitly return here
     })
     .catch((err) => {
@@ -56,6 +57,7 @@ const getItems = (req, res) => {
   ClothingItem.find({})
     .then((items) => {
       console.log("Items fetched successfully", items);
+
       res.status(200).send({ data: items });
     })
     .catch((err) => handleError(err, res));
