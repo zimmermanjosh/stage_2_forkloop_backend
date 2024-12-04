@@ -75,7 +75,7 @@ const updateItem = (req, res) => {
     { $set: { imageUrl } },
     { new: true, runValidators: true }
   )
-    .orFail(new Error("DocumentNotFoundError"))
+    .orFail()
     .then((item) => res.status(200).send({ data: item }))
     .catch((err) => handleError(err, res));
   return {};
@@ -136,7 +136,7 @@ const dislikeItem = (req, res) => {
     { $pull: { likes: req.user._id } }, // Remove user ID from likes array
     { new: true }
   )
-    .orFail(new Error("DocumentNotFoundError"))
+    .orFail()
     .then((item) => res.status(200).send({ data: item }))
     .catch((err) => handleError(err, res));
 };
