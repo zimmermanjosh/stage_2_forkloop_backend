@@ -71,7 +71,7 @@ const deleteItem = (req, res) => {
       error.name = "DocumentNotFoundError";
       throw error;
     })
-    .then(() => res.status(200).send({})) // No content for successful deletion
+    .then(() => res.status(200).send({ message: ERROR_MESSAGES.OK })) // No content for successful deletion
     .catch((err) => {
       console.error("Error during item deletion:", err); // Log the error for debugging
 
@@ -124,7 +124,6 @@ const dislikeItem = (req, res) => {
 module.exports = {
   createItem,
   getItems,
-  updateItem,
   deleteItem,
   likeItem,
   dislikeItem,
