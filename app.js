@@ -26,11 +26,6 @@ app.use((req, res, next) => {
 });
 app.use("/", indexRouter);
 
-// app.post("/clothing", (req, res) => {
-//  console.log(req.user._id); // _id will become accessible
-//  res.send("Testing createClothingItem");
-// });
-
 // Starting the server
 app.listen(PORT, () => {
   console.log("Link to the server");
