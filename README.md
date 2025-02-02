@@ -47,3 +47,29 @@ The file `sprint.txt` should contain the number of the sprint you're currently w
 └── utils
     └── util.js
 ```
+## MongoDB info 
+    
+  Start:
+
+    - sudo systemctl start mongod
+  
+  Error Checking 
+
+    - sudo systemctl daemon-reload
+  
+  Check Status 
+
+    - sudo systemctl status mongod
+    - sudo systemctl enable mongod
+
+  Stop
+  
+    - sudo systemctl stop mongod
+
+  Restart
+
+    - sudo systemctl restart mongod
+
+  Begin using 
+  
+    - mongosh
