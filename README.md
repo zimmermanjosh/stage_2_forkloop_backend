@@ -2,16 +2,16 @@
 
 The back-end project is focused on creating a server for the WTWR application. You’ll gain a deeper understanding of how to work with databases, set up security and testing, and deploy web applications on a remote machine. The eventual goal is to create a server with an API and user authorization.
 
-## Sprint 13 
-  Features include :
-    
+## Sprint 13
+
+Features include :
+
     - expand the user schema with an email and password
     - create routes and controllers for signing up and signing in
     - create routes and controllers for modifying the current user data
     - protect existing routes
 
 ## Software Installation and Run React App
-
 
 ## Running the Project
 
@@ -23,16 +23,17 @@ Open [http://localhost:3000](http://localhost:3000) to view it in your browser
 
 ### Testing
 
-Before committing your code, make sure you edit the file `sprint.txt` in the root folder. 
+Before committing your code, make sure you edit the file `sprint.txt` in the root folder.
 The file `sprint.txt` should contain the number of the sprint you're currently working on. For ex. 13
 
 ### Component Structure
 
 ```list
+
 ├── app.js
 ├── controllers
 │   ├── clothingItems.js
-    └── users.js
+|   └── users.js
 ├── models
 │    ├── clothingItem.js
 │    └── user.js
@@ -47,29 +48,30 @@ The file `sprint.txt` should contain the number of the sprint you're currently w
 └── utils
     └── util.js
 ```
-## MongoDB info 
-    
-  Start:
+
+## MongoDB info
+
+Start:
 
     - sudo systemctl start mongod
-  
-  Error Checking 
+
+Error Checking
 
     - sudo systemctl daemon-reload
-  
-  Check Status 
+
+Check Status
 
     - sudo systemctl status mongod
     - sudo systemctl enable mongod
 
-  Stop
-  
+Stop
+
     - sudo systemctl stop mongod
 
-  Restart
+Restart
 
     - sudo systemctl restart mongod
 
-  Begin using 
-  
+Begin using
+
     - mongosh
