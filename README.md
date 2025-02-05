@@ -49,28 +49,63 @@ The file `sprint.txt` should contain the number of the sprint you're currently w
     └── util.js
 ```
 
-## MongoDB info
+## Build steps
+
+make a directory
+
+```terminal
+  `cd {some directory}` ie `cd ~/Documents`
+  `mkdir Dev`
+```
+
+clone repo to local directory
+
+```terminal
+  `cd Dev`
+  `git clone https://github.com/zimmermanjosh/se_project_express.git`
+```
+
+build resources
+
+```terminal
+  `cd se_project_express`
+  `npm run prebuild`
+  `npm run i`
+  `npm run dev`
+  `npm start`
+```
+
+## MongoDB status (on MBP from tripleten "https://tripleten.com/trainer/web/lesson/1af73edb-bcae-4696-848e-2d42258d8369/?from=program")
+
+Check to see if MongoDb install:
+
+```terminal
+  `mongod --version`
+```
 
 Start:
 
-    - sudo systemctl start mongod
+```terminal
+  `brew services start mongodb-community@7.0`
+```
 
-Error Checking
+Verify MongoDB is running:
 
-    - sudo systemctl daemon-reload
-
-Check Status
-
-    - sudo systemctl status mongod
-    - sudo systemctl enable mongod
+```terminal
+  `brew services list mongodb-community@7.0`
+```
 
 Stop
 
-    - sudo systemctl stop mongod
+```terminal
+  `brew services stop mongodb-community@7.0`
+```
 
 Restart
 
-    - sudo systemctl restart mongod
+```terminal
+    `brew services stop mongodb-community@7.0`
+```
 
 Begin using
 
