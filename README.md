@@ -61,13 +61,15 @@ make a directory
 clone repo to local directory
 
 ```terminal
+
   `cd Dev`
   `git clone https://github.com/zimmermanjosh/se_project_express.git`
 ```
 
-build resources
+build resources and connect to mongoDB
 
 ```terminal
+
   `cd se_project_express`
   `npm run prebuild`
   `npm run i`
@@ -80,33 +82,41 @@ build resources
 Check to see if MongoDb install:
 
 ```terminal
+
   `mongod --version`
 ```
 
 Start:
 
 ```terminal
+
   `brew services start mongodb-community@7.0`
 ```
 
 Verify MongoDB is running:
 
 ```terminal
+
   `brew services list mongodb-community@7.0`
 ```
 
 Stop
 
 ```terminal
+
   `brew services stop mongodb-community@7.0`
 ```
 
 Restart
 
 ```terminal
+
     `brew services stop mongodb-community@7.0`
 ```
 
 Begin using
 
-    - mongosh
+```terminal
+
+  `mongosh`
+```
