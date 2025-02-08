@@ -1,3 +1,4 @@
+const bcrypt = require("bcrypt");
 const User = require("../models/user");
 const { ERROR_CODES, ERROR_MESSAGES } = require("../utils/util");
 
@@ -16,7 +17,11 @@ const handleError = (err, res) => {
       .status(ERROR_CODES.NOT_FOUND)
       .send({ message: ERROR_MESSAGES.NOT_FOUND });
   }
-
+  if (err.code === 11000) {
+    return res
+      .status(ERROR_CODES.CONFLICT)
+      .send({ message: "Email already exists." });
+  }
   // Default server error
   return res
     .status(ERROR_CODES.SERVER_ERROR)
@@ -30,13 +35,15 @@ const getUsers = (req, res) => {
 };
 
 const createUser = (req, res) => {
-  const { name, avatar } = req.body;
+  const { name, avatar, email, password } = req.body;
 
-  User.create({ name, avatar })
+  bcrypt
+    .hash(password, 10)
+    .then((hashedPassword) =>
+      User.create({ name, avatar, email, password: hashedPassword })
+    )
     .then((user) => res.status(201).send(user))
-    .catch((err) => {
-      handleError(err, res);
-    });
+    .catch((err) => handleError(err, res));
 };
 
 const getUser = (req, res) => {

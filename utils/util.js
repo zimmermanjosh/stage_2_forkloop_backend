@@ -5,6 +5,7 @@ const ERROR_CODES = {
   UNAUTHORIZED: 401, // Unauthorized access
   BAD_REQUEST: 400, // Invalid data passed
   NOT_FOUND: 404, // Resource not found
+  CONFLICT: 409, // Conflict
   SERVER_ERROR: 500, // Default server error
 };
 
