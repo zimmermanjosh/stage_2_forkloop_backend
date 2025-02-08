@@ -39,11 +39,13 @@ const createItem = (req, res) => {
 
   return ClothingItem.create({ name, weather, imageUrl, owner: req.user._id }) // Explicitly return here
     .then((item) => {
+      /* eslint-disable no-console */
       console.log("Item created successfully:", item); // Debug log
 
       return res.status(201).send({ data: item }); // Explicitly return here
     })
     .catch((err) => {
+      /* eslint-disable no-console */
       console.error("Error during creation:", err); // Debug log
 
       return handleError(err, res);
@@ -54,6 +56,7 @@ const createItem = (req, res) => {
 const getItems = (req, res) => {
   ClothingItem.find({})
     .then((items) => {
+      /* eslint-disable no-console */
       console.log("Items fetched successfully", items);
 
       res.status(200).send({ data: items });
@@ -73,6 +76,7 @@ const deleteItem = (req, res) => {
     })
     .then(() => res.status(200).send({ message: ERROR_MESSAGES.OK })) // No content for successful deletion
     .catch((err) => {
+      /* eslint-disable no-console */
       console.error("Error during item deletion:", err); // Log the error for debugging
 
       if (err.name === "DocumentNotFoundError") {

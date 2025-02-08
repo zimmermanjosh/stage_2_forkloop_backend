@@ -11,15 +11,17 @@ Features include :
     - create routes and controllers for modifying the current user data
     - protect existing routes
 
-## Software Installation and Run React App
+## Software Installation
 
 ## Running the Project
 
-`npm run start` — to launch the server
+  `mongosh` — to launch the db
 
-`npm run dev` — to launch the server with the hot reload feature
+  `npm run prebuild` — clean and reinstall node modules
 
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser
+  `npm run dev` - start server and live debuggin
+
+happy coding !!
 
 ### Testing
 
@@ -28,8 +30,7 @@ The file `sprint.txt` should contain the number of the sprint you're currently w
 
 ### Component Structure
 
-```list
-
+```tree
 ├── app.js
 ├── controllers
 │   ├── clothingItems.js
@@ -49,29 +50,106 @@ The file `sprint.txt` should contain the number of the sprint you're currently w
     └── util.js
 ```
 
-## MongoDB info
+## npm commands
+
+[npm]
+```npm
+
+test
+    hello world
+
+start
+    node app.js
+
+clean_local
+    rm -rf node_modules && rm -rf .generated && rm -rf target && rm -rf package-lock.json
+
+prebuild
+    npm run clean_local && npm install
+
+permitScripts
+    chmod +x scripts/*
+
+nvmSelect
+    npm run permitScripts && sh scripts/nvmSelect.sh
+
+lint
+    npx eslint .
+
+dev
+    nodemon app.js
+```
+
+## Build steps
+
+make a directory:
+
+```terminal
+    cd {some directory} ie cd ~/Documents
+    mkdir Dev
+```
+
+clone repo to local directory:
+
+```terminal
+
+    cd Dev
+    git clone https://github.com/zimmermanjosh/se_project_express.git
+```
+
+build resources and connect to mongoDB:
+
+```terminal
+
+    cd se_project_express
+    npm run prebuild
+    npm run i
+    npm run dev
+    npm start
+```
+
+## MongoDB
+
+status (on MBP from tripleten "https://tripleten.com/trainer/web/lesson/1af73edb-bcae-4696-848e-2d42258d8369/?from=program")
+
+Check to see if MongoDb install:
+
+```terminal
+
+    mongod --version
+```
 
 Start:
 
-    - sudo systemctl start mongod
+```terminal
 
-Error Checking
+    brew services start mongodb-community@7.0
+```
 
-    - sudo systemctl daemon-reload
+Verify MongoDB is running:
 
-Check Status
+```terminal
 
-    - sudo systemctl status mongod
-    - sudo systemctl enable mongod
+    brew services list mongodb-community@7.0
+```
 
-Stop
+Stop:
 
-    - sudo systemctl stop mongod
+```terminal
 
-Restart
+    brew services stop mongodb-community@7.0
+```
 
-    - sudo systemctl restart mongod
+Restart:
 
-Begin using
+```terminal
 
-    - mongosh
+    brew services stop mongodb-community@7.0
+```
+
+Begin using db:
+
+```terminal
+
+    mongosh
+```
