@@ -1,6 +1,23 @@
-const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const User = require("../models/user");
+const { JWT_SECRET } = require("../utils/config");
+const UnauthorizedError = require("../errors/UnauthorizedError");
+const bcrypt = require("bcrypt");
 const { ERROR_CODES, ERROR_MESSAGES } = require("../utils/util");
+
+module.exports.login = (req, res, next) => {
+  const { email, password } = req.body;
+
+  User.findUserByCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: "7d" });
+      res.send({ token });
+    })
+    .catch(() => {
+      next(new UnauthorizedError("Incorrect email or password"));
+    });
+};
+
 
 const handleError = (err, res) => {
   // Log the error to the console for debugging
