@@ -3,10 +3,12 @@
 
 const express = require("express");
 const mongoose = require("mongoose");
-const indexRouter = require("./routes/index");
 
 const { PORT = 3001, BASE_PATH = "http://localhost" } = process.env;
 const app = express();
+const auth = require("./middlewares/auth");
+const users = require("./controllers/users");
+const items = require("./controllers/clothingItems");
 
 // const cors = require("cors");
 
@@ -22,13 +24,15 @@ mongoose
 
 // Middleware
 app.use(express.json());
-app.use((req, res, next) => {
-  req.user = {
-    _id: "6733c42413cc05a235e5feff", // paste the _id of the test user created in the previous step
-  };
-  next();
-});
-app.use("/", indexRouter);
+
+app.post("/signin", users.login);
+app.post("/signup", users.createUser);
+app.get("/items", items.getItems);
+
+app.use(auth); // Protect all routes below this line
+
+app.get("/users", users.getUsers);
+app.get("/users/:userId", users.getUser);
 
 // Starting the server
 app.listen(PORT, () => {
