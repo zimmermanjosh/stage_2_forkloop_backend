@@ -15,11 +15,11 @@ Features include :
 
 ## Running the Project
 
-  `mongosh` — to launch the db
+`mongosh` — to launch the db
 
-  `npm run prebuild` — clean and reinstall node modules
+`npm run prebuild` — clean and reinstall node modules
 
-  `npm run dev` - start server and live debuggin
+`npm run dev` - start server and live debuggin
 
 happy coding !!
 
@@ -53,6 +53,7 @@ The file `sprint.txt` should contain the number of the sprint you're currently w
 ## npm commands
 
 [npm]
+
 ```npm
 
 test

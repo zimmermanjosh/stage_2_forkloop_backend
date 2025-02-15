@@ -1,24 +1,21 @@
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 const User = require("../models/user");
 const { JWT_SECRET } = require("../utils/config");
-const bcrypt = require("bcryptjs");
 const { ERROR_CODES, ERROR_MESSAGES } = require("../utils/util");
 
-module.exports.login = (req, res, next) => {
-  const { email, password } = req.body;
+module.exports.login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findUserByCredentials(email, password);
 
-  User.findUserByCredentials(email, password)
-    .then((user) => {
-      const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
-        expiresIn: "14d",
-      });
-      res.send({ token });
-    })
-    .catch((err) => {
-      return res
-        .status(ERROR_CODES.UNAUTHORIZED)
-        .send({ message: ERROR_MESSAGES.UNAUTHORIZED });
-    });
+    const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: "14d" });
+    res.send({ token });
+  } catch (err) {
+    res
+      .status(ERROR_CODES.UNAUTHORIZED)
+      .send({ message: ERROR_MESSAGES.UNAUTHORIZED });
+  }
 };
 
 const handleError = (err, res) => {
@@ -61,7 +58,12 @@ const createUser = (req, res) => {
     .then((hashedPassword) =>
       User.create({ name, avatar, email, password: hashedPassword })
     )
-    .then((user) => res.status(201).send(user))
+    .then((user) => {
+      const userWithoutPassword = { ...user.toObject() };
+      delete userWithoutPassword.password;
+      res.status(201).send(userWithoutPassword);
+    })
+
     .catch((err) => handleError(err, res));
 };
 
