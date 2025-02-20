@@ -5,6 +5,7 @@ const ERROR_CODES = {
   UNAUTHORIZED: 401, // Unauthorized access
   BAD_REQUEST: 400, // Invalid data passed
   NOT_FOUND: 404, // Resource not found
+  CONFLICT: 409, // Conflict
   SERVER_ERROR: 500, // Default server error
 };
 
@@ -18,4 +19,11 @@ const ERROR_MESSAGES = {
   SERVER_ERROR: "Internal server error.",
 };
 
-module.exports = { ERROR_CODES, ERROR_MESSAGES };
+class UnauthorizedError extends Error {
+  constructor(message) {
+    super(message);
+    this.statusCode = 401;
+  }
+}
+
+module.exports = { ERROR_CODES, ERROR_MESSAGES, UnauthorizedError };

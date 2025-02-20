@@ -1,5 +1,24 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
+const jwt = require("jsonwebtoken");
+// eslint-disable-next-line import/no-extraneous-dependencies
+const bcrypt = require("bcryptjs");
 const User = require("../models/user");
-const { ERROR_CODES, ERROR_MESSAGES } = require("../utils/util");
+const { JWT_SECRET } = require("../utils/config");
+const { ERROR_CODES, ERROR_MESSAGES } = require("../utils/errors");
+
+module.exports.login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findUserByCredentials(email, password);
+
+    const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: "14d" });
+    res.send({ token });
+  } catch (err) {
+    res
+      .status(ERROR_CODES.UNAUTHORIZED)
+      .send({ message: ERROR_MESSAGES.UNAUTHORIZED });
+  }
+};
 
 const handleError = (err, res) => {
   // Log the error to the console for debugging
@@ -16,7 +35,11 @@ const handleError = (err, res) => {
       .status(ERROR_CODES.NOT_FOUND)
       .send({ message: ERROR_MESSAGES.NOT_FOUND });
   }
-
+  if (err.code === 11000) {
+    return res
+      .status(ERROR_CODES.CONFLICT)
+      .send({ message: "Email already exists." });
+  }
   // Default server error
   return res
     .status(ERROR_CODES.SERVER_ERROR)
@@ -30,13 +53,20 @@ const getUsers = (req, res) => {
 };
 
 const createUser = (req, res) => {
-  const { name, avatar } = req.body;
+  const { name, avatar, email, password } = req.body;
 
-  User.create({ name, avatar })
-    .then((user) => res.status(201).send(user))
-    .catch((err) => {
-      handleError(err, res);
-    });
+  bcrypt
+    .hash(password, 10)
+    .then((hashedPassword) =>
+      User.create({ name, avatar, email, password: hashedPassword })
+    )
+    .then((user) => {
+      const userWithoutPassword = { ...user.toObject() };
+      delete userWithoutPassword.password;
+      res.status(201).send(userWithoutPassword);
+    })
+
+    .catch((err) => handleError(err, res));
 };
 
 const getUser = (req, res) => {

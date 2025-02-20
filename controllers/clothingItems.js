@@ -1,5 +1,5 @@
 const ClothingItem = require("../models/clothingItem");
-const { ERROR_CODES, ERROR_MESSAGES } = require("../utils/util");
+const { ERROR_CODES, ERROR_MESSAGES } = require("../utils/errors");
 
 // Centralized error handler
 const handleError = (err, res) => {

@@ -15,11 +15,11 @@ Features include :
 
 ## Running the Project
 
-  `mongosh` — to launch the db
+`mongosh` — to launch the db
 
-  `npm run prebuild` — clean and reinstall node modules
+`npm run pre-build` — clean and reinstall node modules
 
-  `npm run dev` - start server and live debuggin
+`npm run dev` - start server and live debugging
 
 happy coding !!
 
@@ -53,6 +53,7 @@ The file `sprint.txt` should contain the number of the sprint you're currently w
 ## npm commands
 
 [npm]
+
 ```npm
 
 test
@@ -110,7 +111,7 @@ build resources and connect to mongoDB:
 
 ## MongoDB
 
-status (on MBP from tripleten "https://tripleten.com/trainer/web/lesson/1af73edb-bcae-4696-848e-2d42258d8369/?from=program")
+status (on MBP from triple-ten "https://tripleten.com/trainer/web/lesson/1af73edb-bcae-4696-848e-2d42258d8369/?from=program")
 
 Check to see if MongoDb install:
 
