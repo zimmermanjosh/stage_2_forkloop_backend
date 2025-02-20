@@ -145,7 +145,7 @@ Restart:
 
 ```terminal
 
-    brew services stop mongodb-community@7.0
+    brew services restart mongodb-community@7.0
 ```
 
 Begin using db:

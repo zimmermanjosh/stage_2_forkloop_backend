@@ -25,4 +25,5 @@ module.exports = (req, res, next) => {
 
   req.user = payload;
   next();
+  return undefined; // Explicitly return undefined to satisfy ESLint
 };
