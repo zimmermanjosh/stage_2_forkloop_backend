@@ -19,4 +19,11 @@ const ERROR_MESSAGES = {
   SERVER_ERROR: "Internal server error.",
 };
 
-module.exports = { ERROR_CODES, ERROR_MESSAGES };
+class UnauthorizedError extends Error {
+  constructor(message) {
+    super(message);
+    this.statusCode = 401;
+  }
+}
+
+module.exports = { ERROR_CODES, ERROR_MESSAGES, UnauthorizedError };
