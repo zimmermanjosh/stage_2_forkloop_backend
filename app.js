@@ -8,7 +8,7 @@ const { getUsers, createUser, getUser, login } = require("./controllers/users");
 const { getItems } = require("./controllers/clothingItems");
 
 mongoose
-  .connect("mongodb://127.0.0.1:27017/wtwr_db")
+  .connect("mongodb://127.0.0.1:27017/wtwr_db") //# 27017
   .then(() => {
     // eslint-disable-next-line no-console
     console.log("Connected to MongoDB");
