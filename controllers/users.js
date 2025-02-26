@@ -35,7 +35,7 @@ const handleError = (err, res) => {
       .status(ERROR_CODES.NOT_FOUND)
       .send({ message: ERROR_MESSAGES.NOT_FOUND });
   }
-  if (err.code === 11000) {
+  if (err.code === 409) {
     return res
       .status(ERROR_CODES.CONFLICT)
       .send({ message: "Email already exists." });
@@ -52,21 +52,31 @@ const getUsers = (req, res) => {
     .catch((err) => handleError(err, res));
 };
 
-const createUser = (req, res) => {
-  const { name, avatar, email, password } = req.body;
+const createUser = async (req, res) => {
+  try {
+    const { name, avatar, email, password } = req.body;
+    const existingUser = await User.findOne({ email });
 
-  bcrypt
-    .hash(password, 10)
-    .then((hashedPassword) =>
-      User.create({ name, avatar, email, password: hashedPassword })
-    )
-    .then((user) => {
-      const userWithoutPassword = { ...user.toObject() };
-      delete userWithoutPassword.password;
-      res.status(201).send(userWithoutPassword);
-    })
+    if (existingUser) {
+      return res
+        .status(ERROR_CODES.CONFLICT)
+        .send({ message: "Email already exists." });
+    }
 
-    .catch((err) => handleError(err, res));
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = await User.create({
+      name,
+      avatar,
+      email,
+      password: hashedPassword,
+    });
+
+    const userWithoutPassword = { ...user.toObject() };
+    delete userWithoutPassword.password;
+    res.status(ERROR_CODES.CREATED).send(userWithoutPassword);
+  } catch (err) {
+    handleError(err, res);
+  }
 };
 
 const getUser = (req, res) => {
@@ -85,4 +95,4 @@ const getUser = (req, res) => {
     });
 };
 
-module.exports = { getUsers, createUser, getUser , login};
+module.exports = { getUsers, createUser, getUser, login };

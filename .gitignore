@@ -42,3 +42,6 @@ node_modules
 .vscode
 test
 .trunk
+
+*.ARCHIVES
+*.ZIP
