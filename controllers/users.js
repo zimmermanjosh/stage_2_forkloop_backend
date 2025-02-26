@@ -21,8 +21,6 @@ const login = async (req, res) => {
 };
 
 const handleError = (err, res) => {
-  // Log the error to the console for debugging
-  // console.error(err); // Log the error for debugging
 
   if (err.name === "ValidationError") {
     return res
