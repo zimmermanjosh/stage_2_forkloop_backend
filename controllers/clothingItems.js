@@ -31,22 +31,21 @@ const createItem = (req, res) => {
 
   // Validate input fields
   if (!name || !weather || !imageUrl || !owner) {
-    // console.log("Validation failed:", req.body, owner); // Debug log
     return res
       .status(ERROR_CODES.BAD_REQUEST)
       .send({ message: "Missing required fields: name, weather, imageUrl" });
   }
 
-  return ClothingItem.create({ name, weather, imageUrl, owner: req.user._id }) // Explicitly return here
+  return ClothingItem.create({ name, weather, imageUrl, owner: req.user._id })
     .then((item) => {
       /* eslint-disable no-console */
-      console.log("Item created successfully:", item); // Debug log
+      console.log("Item created successfully:", item);
 
-      return res.status(201).send({ data: item }); // Explicitly return here
+      return res.status(201).send({ data: item });
     })
     .catch((err) => {
       /* eslint-disable no-console */
-      console.error("Error during creation:", err); // Debug log
+      console.error("Error during creation:", err);
 
       return handleError(err, res);
     });
@@ -74,10 +73,10 @@ const deleteItem = (req, res) => {
       error.name = "DocumentNotFoundError";
       throw error;
     })
-    .then(() => res.status(200).send({ message: ERROR_MESSAGES.OK })) // No content for successful deletion
+    .then(() => res.status(200).send({ message: ERROR_MESSAGES.OK }))
     .catch((err) => {
       /* eslint-disable no-console */
-      console.error("Error during item deletion:", err); // Log the error for debugging
+      console.error("Error during item deletion:", err);
 
       if (err.name === "DocumentNotFoundError") {
         return res
@@ -103,7 +102,7 @@ const likeItem = (req, res) => {
 
   ClothingItem.findByIdAndUpdate(
     itemId,
-    { $addToSet: { likes: req.user._id } }, // Add user ID if not already in likes array
+    { $addToSet: { likes: req.user._id } },
     { new: true }
   )
     .orFail()
@@ -117,7 +116,7 @@ const dislikeItem = (req, res) => {
 
   ClothingItem.findByIdAndUpdate(
     itemId,
-    { $pull: { likes: req.user._id } }, // Remove user ID from likes array
+    { $pull: { likes: req.user._id } },
     { new: true }
   )
     .orFail()
