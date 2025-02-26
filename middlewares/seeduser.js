@@ -14,21 +14,21 @@ const seedUser = async () => {
 
   await User.create([
     {
-      //_id: new mongoose.Types.ObjectId("673a687016619aa93deecaa1"), // Replace with your own unique ID generator
+      // _id: new mongoose.Types.ObjectId("673a687016619aa93deecaa1"), // Replace with your own unique ID generator
       name: "testjoshtarget",
       avatar: "https://example.com/testjoshtarget.jpg",
       email: "testjoshtarget@example.com",
       password: hashedPassword,
     },
     {
-      //_id: new mongoose.Types.ObjectId("673a687016619aa93deecaa1"), // Replace with your own unique ID generator
+      // _id: new mongoose.Types.ObjectId("673a687016619aa93deecaa1"), // Replace with your own unique ID generator
       name: "testjoshtargetagain",
       avatar: "https://example.com/testjoshtargetagain.jpg",
       email: "testjoshtargetagain@example.com",
       password: hashedPassword,
     },
   ]);
-
+  // eslint-disable-next-line no-console
   console.log("User added!");
   mongoose.disconnect();
 };
