@@ -21,7 +21,6 @@ const login = async (req, res) => {
 };
 
 const handleError = (err, res) => {
-
   if (err.name === "ValidationError") {
     return res
       .status(ERROR_CODES.BAD_REQUEST)
