@@ -31,23 +31,28 @@ The file `sprint.txt` should contain the number of the sprint you're currently w
 ### Component Structure
 
 ```tree
-├── app.js
-├── controllers
-│   ├── clothingItems.js
-|   └── users.js
-├── models
-│    ├── clothingItem.js
-│    └── user.js
-├── package.json
-├── README.md
-├── routes
-│     ├── clothingItems.js
-│     ├── index.js
-│     └── users.js
-├── sprint.txt
-├── test
-└── utils
-    └── util.js
+  ├── README.md
+  ├── app.js
+  ├── controllers
+  │   ├── clothingItems.js
+  │   └── users.js
+  ├── middlewares
+  │   ├── NOTES.MD
+  │   ├── auth.js
+  │   └── seeduser.js
+  ├── models
+  │   ├── clothingItem.js
+  │   └── user.js
+  ├── package-lock.json
+  ├── package.json
+  ├── routes
+  │   ├── clothingItems.js
+  │   ├── index.js
+  │   └── users.js
+  ├── sprint.txt
+  └── utils
+      ├── config.js
+      └── errors.js
 ```
 
 ## npm commands

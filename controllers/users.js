@@ -9,6 +9,13 @@ const { ERROR_CODES, ERROR_MESSAGES } = require("../utils/errors");
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res
+        .status(ERROR_CODES.BAD_REQUEST)
+        .send({ message: ERROR_MESSAGES.BAD_REQUEST });
+    }
+
     const user = await User.findUserByCredentials(email, password);
 
     const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: "14d" });
@@ -57,7 +64,7 @@ const createUser = async (req, res) => {
     if (existingUser) {
       return res
         .status(ERROR_CODES.CONFLICT)
-        .send({ message: "Email already exists." });
+        .send({ message: ERROR_MESSAGES.CONFLICT });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
