@@ -5,10 +5,8 @@
   "main": "app.js",
   "scripts": {
     "test": "hello world",
-    "clean_local": "rm -rf node_modules && rm -rf .generated && rm -rf target && rm -rf package-lock.json",
-    "prebuild": "npm run clean_local && npm install",
-    "permitScripts": "chmod +x scripts/*",
-    "nvmSelect": "npm run permitScripts && sh scripts/nvmSelect.sh",
+    "clean:local": "rm -rf node_modules && rm -rf .generated && rm -rf target && rm -rf package-lock.json",
+    "prebuild": "npm run clean:local && nvm use && npm install",
     "lint": "npx eslint .",
     "start": "node app.js",
     "dev": "nodemon app.js"
