@@ -5,6 +5,7 @@ const bcrypt = require("bcryptjs");
 const User = require("../models/user");
 const { JWT_SECRET } = require("../utils/config");
 const { ERROR_CODES, ERROR_MESSAGES } = require("../utils/errors");
+const { JWT_EXPIRATION_TIME } = require("../utils/config");
 
 // eslint-disable-next-line
 const login = async (req, res) => {
@@ -19,7 +20,7 @@ const login = async (req, res) => {
 
     const user = await User.findUserByCredentials(email, password);
 
-    const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: "14d" });
+    const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: JWT_EXPIRATION_TIME });
     res.send({ token });
   } catch (err) {
     res.status(200).send({ message: "Incorrect email or password" });
