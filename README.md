@@ -31,6 +31,7 @@ The file `sprint.txt` should contain the number of the sprint you're currently w
 ### Component Structure
 
 ```tree
+
   ├── README.md
   ├── app.js
   ├── controllers
@@ -129,28 +130,28 @@ Start:
 
 ```terminal
 
-    brew services start mongodb-community@7.0
+    brew services start mongodb-community@5.0
 ```
 
 Verify MongoDB is running:
 
 ```terminal
 
-    brew services list mongodb-community@7.0
+    brew services list
 ```
 
 Stop:
 
 ```terminal
 
-    brew services stop mongodb-community@7.0
+    brew services stop mongodb-community@5.0
 ```
 
 Restart:
 
 ```terminal
 
-    brew services restart mongodb-community@7.0
+    brew services restart mongodb-community@5.0
 ```
 
 Begin using db:
