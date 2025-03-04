@@ -160,3 +160,7 @@ Begin using db:
 
     mongosh
 ```
+
+## notes
+
+- .nvmrc file updated to use node 22
