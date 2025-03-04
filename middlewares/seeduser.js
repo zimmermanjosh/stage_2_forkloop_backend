@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
-const User = require("../models/user"); // Adjust the path based on your structure
+const User = require("../models/user");
 
 mongoose.connect("mongodb://localhost:27017/wtwr_db", {
   useNewUrlParser: true,

@@ -31,23 +31,29 @@ The file `sprint.txt` should contain the number of the sprint you're currently w
 ### Component Structure
 
 ```tree
-├── app.js
-├── controllers
-│   ├── clothingItems.js
-|   └── users.js
-├── models
-│    ├── clothingItem.js
-│    └── user.js
-├── package.json
-├── README.md
-├── routes
-│     ├── clothingItems.js
-│     ├── index.js
-│     └── users.js
-├── sprint.txt
-├── test
-└── utils
-    └── util.js
+
+  ├── README.md
+  ├── app.js
+  ├── controllers
+  │   ├── clothingItems.js
+  │   └── users.js
+  ├── middlewares
+  │   ├── NOTES.MD
+  │   ├── auth.js
+  │   └── seeduser.js
+  ├── models
+  │   ├── clothingItem.js
+  │   └── user.js
+  ├── package-lock.json
+  ├── package.json
+  ├── routes
+  │   ├── clothingItems.js
+  │   ├── index.js
+  │   └── users.js
+  ├── sprint.txt
+  └── utils
+      ├── config.js
+      └── errors.js
 ```
 
 ## npm commands
@@ -124,28 +130,28 @@ Start:
 
 ```terminal
 
-    brew services start mongodb-community@7.0
+    brew services start mongodb-community@5.0
 ```
 
 Verify MongoDB is running:
 
 ```terminal
 
-    brew services list mongodb-community@7.0
+    brew services list
 ```
 
 Stop:
 
 ```terminal
 
-    brew services stop mongodb-community@7.0
+    brew services stop mongodb-community@5.0
 ```
 
 Restart:
 
 ```terminal
 
-    brew services restart mongodb-community@7.0
+    brew services restart mongodb-community@5.0
 ```
 
 Begin using db:

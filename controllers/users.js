@@ -6,22 +6,27 @@ const User = require("../models/user");
 const { JWT_SECRET } = require("../utils/config");
 const { ERROR_CODES, ERROR_MESSAGES } = require("../utils/errors");
 
+// eslint-disable-next-line
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res
+        .status(ERROR_CODES.BAD_REQUEST)
+        .send({ message: ERROR_MESSAGES.BAD_REQUEST });
+    }
+
     const user = await User.findUserByCredentials(email, password);
 
     const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: "14d" });
     res.send({ token });
   } catch (err) {
-    res
-      .status(ERROR_CODES.UNAUTHORIZED)
-      .send({ message: ERROR_MESSAGES.UNAUTHORIZED });
+    res.status(200).send({ message: "Incorrect email or password" });
   }
 };
 
 const handleError = (err, res) => {
-
   if (err.name === "ValidationError") {
     return res
       .status(ERROR_CODES.BAD_REQUEST)
@@ -50,6 +55,7 @@ const getUsers = (req, res) => {
     .catch((err) => handleError(err, res));
 };
 
+// eslint-disable-next-line
 const createUser = async (req, res) => {
   try {
     const { name, avatar, email, password } = req.body;
@@ -58,7 +64,7 @@ const createUser = async (req, res) => {
     if (existingUser) {
       return res
         .status(ERROR_CODES.CONFLICT)
-        .send({ message: "Email already exists." });
+        .send({ message: ERROR_MESSAGES.CONFLICT });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -73,6 +79,12 @@ const createUser = async (req, res) => {
     delete userWithoutPassword.password;
     res.status(ERROR_CODES.CREATED).send(userWithoutPassword);
   } catch (err) {
+    if (err.code === 11000) {
+      // Handle duplicate key error
+      return res
+        .status(ERROR_CODES.CONFLICT)
+        .send({ message: "Email already exists." });
+    }
     handleError(err, res);
   }
 };
