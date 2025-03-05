@@ -23,7 +23,7 @@ const login = async (req, res) => {
     const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: JWT_EXPIRATION_TIME });
     res.send({ token });
   } catch (err) {
-    res.status(ERROR_CODES.UNAUTHORIZED).send({ message: "Incorrect email or password" });
+    res.status(ERROR_CODES.UNAUTHORIZED).send({ message: ERROR_MESSAGES.UNAUTHORIZED });
   }
 };
 
@@ -57,17 +57,9 @@ const getUsers = (req, res) => {
 };
 
 // eslint-disable-next-line
-// eslint-disable-next-line
 const createUser = async (req, res) => {
   try {
     const { name, avatar, email, password } = req.body;
-    const existingUser = await User.findOne({ email });
-
-    if (existingUser) {
-      return res
-        .status(ERROR_CODES.CONFLICT)
-        .send({ message: ERROR_MESSAGES.CONFLICT });
-    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await User.create({
@@ -83,14 +75,14 @@ const createUser = async (req, res) => {
   } catch (err) {
     if (err.code === 11000) {
       // MongoDB duplicate key error (email already exists)
-      return res.status(409).send({ message: 'Email already exists' });
+      return res.status(ERROR_CODES.CONFLICT).send({ message: ERROR_MESSAGES.CONFLICT });
     }
 
     if (err.name === 'ValidationError') {
-      return res.status(400).send({ message: 'Invalid data passed to the server' });
+      return res.status(ERROR_CODES.BAD_REQUEST).send({ message: ERROR_MESSAGES.BAD_REQUEST });
     }
 
-    return res.status(500).send({ message: 'An error has occurred on the server' });
+    return res.status(ERROR_CODES.SERVER_ERROR).send({ message: ERROR_MESSAGES.SERVER_ERROR });
   }
 };
 
