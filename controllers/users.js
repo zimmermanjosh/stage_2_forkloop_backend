@@ -57,6 +57,7 @@ const getUsers = (req, res) => {
 };
 
 // eslint-disable-next-line
+// eslint-disable-next-line
 const createUser = async (req, res) => {
   try {
     const { name, avatar, email, password } = req.body;
@@ -81,12 +82,15 @@ const createUser = async (req, res) => {
     res.status(ERROR_CODES.CREATED).send(userWithoutPassword);
   } catch (err) {
     if (err.code === 11000) {
-      // Handle duplicate key error
-      return res
-        .status(ERROR_CODES.CONFLICT)
-        .send({ message: "Email already exists." });
+      // MongoDB duplicate key error (email already exists)
+      return res.status(409).send({ message: 'Email already exists' });
     }
-    handleError(err, res);
+
+    if (err.name === 'ValidationError') {
+      return res.status(400).send({ message: 'Invalid data passed to the server' });
+    }
+
+    return res.status(500).send({ message: 'An error has occurred on the server' });
   }
 };
 
