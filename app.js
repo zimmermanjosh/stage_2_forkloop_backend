@@ -1,12 +1,16 @@
 const express = require("express");
 const mongoose = require("mongoose");
 
+const { ERROR_CODES, ERROR_MESSAGES } = require("./utils/errors");
+
 const { PORT = 3001, BASE_PATH = "http://localhost" } = process.env;
+
 const app = express();
+
 const auth = require("./middlewares/auth");
 const { getUsers, createUser, getUser, login } = require("./controllers/users");
 const { getItems } = require("./controllers/clothingItems");
-const { ERROR_CODES, ERROR_MESSAGES } = require("./utils/errors");
+
 mongoose
   .connect("mongodb://127.0.0.1:27017/wtwr_db") // # 27017
   .then(() => {

@@ -128,4 +128,4 @@ const updateUser = (req, res) => {
 };
 
 
-module.exports = {  getUsers, createUser, getUser, login, getCurrentUser, updateUser  };
+module.exports = {  getUsers, createUser, getUser, login, updateUser  };
