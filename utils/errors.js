@@ -14,6 +14,7 @@ const ERROR_MESSAGES = {
   UNAUTHORIZED: "Unauthorized access.",
   OK: "Request successful.",
   CREATED: "Resource created successfully.",
+  CONFLICT: "Email already exists.",
   BAD_REQUEST: "Invalid data passed.",
   NOT_FOUND: "Resource not found.",
   SERVER_ERROR: "Internal server error.",

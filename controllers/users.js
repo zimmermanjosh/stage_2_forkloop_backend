@@ -101,5 +101,31 @@ const getUser = (req, res) => {
       return handleError(err, res);
     });
 };
+const updateUser = (req, res) => {
+  const { name, avatar } = req.body;
+  const userId = req.user._id;
 
-module.exports = { getUsers, createUser, getUser, login };
+  User.findByIdAndUpdate(
+    userId,
+    { name, avatar },
+    { new: true, runValidators: true }
+  )
+    .orFail()
+    .then((user) => res.status(200).send(user))
+    .catch((err) => {
+      if (err.name === "ValidationError") {
+        return res
+          .status(ERROR_CODES.BAD_REQUEST)
+          .send({ message: ERROR_MESSAGES.BAD_REQUEST });
+      }
+      if (err.name === "CastError") {
+        return res
+          .status(ERROR_CODES.BAD_REQUEST)
+          .send({ message: "Invalid ID format." });
+      }
+      return handleError(err, res);
+    });
+};
+
+
+module.exports = {  getUsers, createUser, getUser, login, getCurrentUser, updateUser  };
