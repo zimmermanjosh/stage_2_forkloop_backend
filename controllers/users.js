@@ -23,7 +23,7 @@ const login = async (req, res) => {
     const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: JWT_EXPIRATION_TIME });
     res.send({ token });
   } catch (err) {
-    res.status(200).send({ message: "Incorrect email or password" });
+    res.status(ERROR_CODES.UNAUTHORIZED).send({ message: "Incorrect email or password" });
   }
 };
 
