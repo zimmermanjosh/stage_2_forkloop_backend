@@ -18,6 +18,10 @@ const ERROR_MESSAGES = {
   BAD_REQUEST: "Invalid data passed.",
   NOT_FOUND: "Resource not found.",
   SERVER_ERROR: "Internal server error.",
+  FORBIDDEN: "Access forbidden",
+  INVALID_ID: "Invalid ID format",
+  ITEM_NOT_FOUND: "Item not found",
+  UNAUTHORIZED_DELETE: "You are not authorized to delete this item"
 };
 
 class UnauthorizedError extends Error {
