@@ -127,5 +127,21 @@ const updateUser = (req, res) => {
     });
 };
 
+const getCurrentUser = (req, res) => {
+  const userId = req.user._id;
 
-module.exports = {  getUsers, createUser, getUser, login, updateUser  };
+  User.findById(userId)
+    .orFail()
+    .then((user) => res.status(200).send(user))
+    .catch((err) => {
+      if (err.name === "CastError") {
+        return res
+          .status(ERROR_CODES.BAD_REQUEST)
+          .send({ message: "Invalid ID format." });
+      }
+      return handleError(err, res);
+    });
+};
+
+
+module.exports = {  getUsers, createUser, getUser, login, updateUser, getCurrentUser  };

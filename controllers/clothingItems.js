@@ -51,9 +51,7 @@ const createItem = (req, res) => {
     });
 };
 
-
 // Get all clothing items
-
     const getItems = (req, res) =>
       ClothingItem.find({})
         .then((items) => {
@@ -62,7 +60,6 @@ const createItem = (req, res) => {
           return res.status(ERROR_CODES.OK).send({ data: items });
         })
         .catch((err) => handleError(err, res));
-
 
 // Delete a clothing item
 const deleteItem = (req, res) => {
