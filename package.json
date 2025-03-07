@@ -4,12 +4,15 @@
   "description": "MERN Stack project sprint 13 project 13 node express",
   "main": "app.js",
   "scripts": {
-    "test": "hello world",
-    "clean:local": "rm -rf node_modules && rm -rf .generated && rm -rf target && rm -rf package-lock.json",
-    "prebuild": "npm run clean:local && nvm use && npm install",
+    "test": "echo \"No tests specified\" && exit 0",
+    "clean:local": "rm -rf node_modules && rm -rf package-lock.json",
+    "prebuild": "npm run clean:local && npm install",
     "lint": "npx eslint .",
     "start": "node app.js",
-    "dev": "nodemon app.js"
+    "dev": "nodemon app.js",
+    "seed": "node resources/seeduser.js",
+    "db:start": "brew services start mongodb-community && mongosh",
+    "db:stop": "brew services stop mongodb-community"
   },
   "repository": {
     "type": "git",
@@ -26,7 +29,6 @@
     "bcrypt": "^5.1.1",
     "bcryptjs": "^3.0.0",
     "cors": "^2.8.5",
-
     "express": "^4.21.1",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^6.6.1",

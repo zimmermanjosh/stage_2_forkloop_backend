@@ -1,18 +1,18 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const cors = require("cors");
+const routes = require("./routes");
+const auth = require("./middlewares/auth");
+const { login, createUser } = require("./controllers/users");
+// const {userRouter, clothingItem } = require("./routes/index.js");
+
+const app = express();
+const { PORT = 3001, BASE_PATH = "http://localhost" } = process.env;
 
 const { ERROR_CODES, ERROR_MESSAGES } = require("./utils/errors");
 
-const { PORT = 3001, BASE_PATH = "http://localhost" } = process.env;
-
-const app = express();
-
-const auth = require("./middlewares/auth");
-const { getUsers, createUser, getUser, login } = require("./controllers/users");
-const { getItems } = require("./controllers/clothingItems");
-
 mongoose
-  .connect("mongodb://127.0.0.1:27017/wtwr_db") // # 27017
+  .connect("mongodb://127.0.0.1:27017/wtwr_db")
   .then(() => {
     // eslint-disable-next-line no-console
     console.log("Connected to MongoDB");
@@ -21,24 +21,22 @@ mongoose
   .catch((err) => console.error(err));
 
 app.use(express.json());
+app.use(cors());
 
+// Public routes that don't need auth
 app.post("/signin", login);
-
 app.post("/signup", createUser);
 
-app.get("/items", getItems);
+// Apply auth middleware only to protected routes
+app.use("/users", auth, routes.userRouter);
+app.use("/items", routes.clothingItem);
 
-app.use(auth);
-
-app.get("/users", getUsers);
-
-app.get("/users/:userId", getUser);
+// 404 handler for undefined routes
 app.use((req, res) => {
   res.status(ERROR_CODES.NOT_FOUND).send({ message: ERROR_MESSAGES.NOT_FOUND });
 });
+
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console
-  console.log("Link to the server");
-  // eslint-disable-next-line no-console
-  console.log(BASE_PATH);
+  console.log(`Server running on ${BASE_PATH}:${PORT}`);
 });

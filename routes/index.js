@@ -9,4 +9,8 @@ router.use((req, res) =>
   res.status(ERROR_CODES.NOT_FOUND).send({ message: ERROR_MESSAGES.NOT_FOUND })
 );
 
-module.exports = router;
+
+module.exports = {
+  userRouter,
+  clothingItem
+};
