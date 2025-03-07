@@ -4,6 +4,7 @@ const cors = require("cors");
 const routes = require("./routes");
 const auth = require("./middlewares/auth");
 const { login, createUser } = require("./controllers/users");
+// const {userRouter, clothingItem } = require("./routes/index.js");
 
 const app = express();
 const { PORT = 3001, BASE_PATH = "http://localhost" } = process.env;
@@ -28,7 +29,7 @@ app.post("/signup", createUser);
 
 // Apply auth middleware only to protected routes
 app.use("/users", auth, routes.userRouter);
-app.use("/items", routes.clothingItemRouter);
+app.use("/items", routes.clothingItem);
 
 // 404 handler for undefined routes
 app.use((req, res) => {

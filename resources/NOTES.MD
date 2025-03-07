@@ -121,3 +121,49 @@ export const seedData = async () => {
     - shit,
 - npm run dev
 - now working....
+
+which mongo
+- brew list | grep mongodb
+
+brew services list
+### troubleshooting startup
+
+  `brew services stop mongodb-community@7.0` || `brew services stop mongodb-community@5.0`
+
+  `sudo chown $(whoami):admin ~/Library/LaunchAgents/homebrew.mxcl.mongodb-community@7.0.plist`
+
+  `chmod 644 ~/Library/LaunchAgents/homebrew.mxcl.mongodb-community@7.0.plist` || `chmod 644 ~/Library/LaunchAgents/homebrew.mxcl.mongodb-community@5.0.plist`
+
+### fails again
+
+//check agents
+  `ls -la /Library/LaunchAgents/`
+
+//kill app
+  `brew services stop mongodb-community`
+
+//uninstall
+
+  `brew uninstall mongodb-community`
+
+//look for update/reinstall
+
+  `brew tap mongodb/brew`
+  `brew install mongodb-community`
+//start
+
+  `brew services start mongodb-community`
+  `mongosh`
+
+//return if good
+
+Current Mongosh Log ID: 67ca3fb150cf3f9689a3772c
+Connecting to:          mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.4.0
+Using MongoDB:          8.0.5
+Using Mongosh:          2.4.0
+
+For mongosh info see: https://www.mongodb.com/docs/mongodb-shell/
+
+------
+   The server generated these startup warnings when booting
+   2025-03-06T18:33:51.865-06:00: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted

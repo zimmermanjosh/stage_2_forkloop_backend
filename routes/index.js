@@ -10,3 +10,7 @@ router.use((req, res) =>
 );
 
 
+module.exports = {
+  userRouter,
+  clothingItem
+};
