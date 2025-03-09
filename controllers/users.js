@@ -1,30 +1,35 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 const jwt = require("jsonwebtoken");
-// eslint-disable-next-line import/no-extraneous-dependencies
 const bcrypt = require("bcryptjs");
 const User = require("../models/user");
 const { JWT_SECRET } = require("../utils/config");
 const { ERROR_CODES, ERROR_MESSAGES } = require("../utils/errors");
 const { JWT_EXPIRATION_TIME } = require("../utils/config");
 
-// eslint-disable-next-line
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
-
     if (!email || !password) {
       return res
         .status(ERROR_CODES.BAD_REQUEST)
         .send({ message: ERROR_MESSAGES.BAD_REQUEST });
     }
-
     const user = await User.findUserByCredentials(email, password);
-
     const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: JWT_EXPIRATION_TIME });
     res.send({ token });
   } catch (err) {
-    res.status(ERROR_CODES.UNAUTHORIZED).send({ message: ERROR_MESSAGES.UNAUTHORIZED });
+    // res.status(ERROR_CODES.UNAUTHORIZED).send({ message: ERROR_MESSAGES.UNAUTHORIZED });
+    if (err.statusCode === 401) {
+      return res
+        .status(ERROR_CODES.UNAUTHORIZED)
+        .send({ message: ERROR_MESSAGES.UNAUTHORIZED });
+    }
+      // Default server error
+      return res
+      .status(ERROR_CODES.SERVER_ERROR)
+      .send({ message: ERROR_MESSAGES.SERVER_ERROR });
   }
+  // Explicitly return undefined to satisfy ESLint
+  return res;
 };
 
 const handleError = (err, res) => {
@@ -50,13 +55,6 @@ const handleError = (err, res) => {
     .send({ message: ERROR_MESSAGES.SERVER_ERROR });
 };
 
-const getUsers = (req, res) => {
-  User.find({})
-    .then((users) => res.status(200).send(users))
-    .catch((err) => handleError(err, res));
-};
-
-// eslint-disable-next-line
 const createUser = async (req, res) => {
   try {
     const { name, avatar, email, password } = req.body;
@@ -84,6 +82,8 @@ const createUser = async (req, res) => {
 
     return res.status(ERROR_CODES.SERVER_ERROR).send({ message: ERROR_MESSAGES.SERVER_ERROR });
   }
+    // Explicitly return undefined to satisfy ESLint
+  return res;
 };
 
 const getUser = (req, res) => {
@@ -144,4 +144,4 @@ const getCurrentUser = (req, res) => {
 };
 
 
-module.exports = {  getUsers, createUser, getUser, login, updateUser, getCurrentUser  };
+module.exports = { createUser, getUser, login, updateUser, getCurrentUser };

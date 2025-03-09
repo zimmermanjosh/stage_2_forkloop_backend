@@ -2,8 +2,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const routes = require("./routes");
-const auth = require("./middlewares/auth");
 const { login, createUser } = require("./controllers/users");
+// const auth = require("./middlewares/auth");
 // const {userRouter, clothingItem } = require("./routes/index.js");
 
 const app = express();
@@ -28,7 +28,7 @@ app.post("/signin", login);
 app.post("/signup", createUser);
 
 // Apply auth middleware only to protected routes
-app.use("/users", auth, routes.userRouter);
+app.use("/users", routes.userRouter);
 app.use("/items", routes.clothingItem);
 
 // 404 handler for undefined routes
