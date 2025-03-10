@@ -44,11 +44,6 @@ const handleError = (err, res) => {
       .status(ERROR_CODES.NOT_FOUND)
       .send({ message: ERROR_MESSAGES.NOT_FOUND });
   }
-  if (err.code === 409) {
-    return res
-      .status(ERROR_CODES.CONFLICT)
-      .send({ message: "Email already exists." });
-  }
   // Default server error
   return res
     .status(ERROR_CODES.SERVER_ERROR)
@@ -86,21 +81,6 @@ const createUser = async (req, res) => {
   return res;
 };
 
-const getUser = (req, res) => {
-  const { userId } = req.params;
-
-  User.findById(userId)
-    .orFail()
-    .then((user) => res.status(200).send(user))
-    .catch((err) => {
-      if (err.name === "CastError") {
-        return res
-          .status(ERROR_CODES.BAD_REQUEST)
-          .send({ message: "Invalid ID format." });
-      }
-      return handleError(err, res);
-    });
-};
 const updateUser = (req, res) => {
   const { name, avatar } = req.body;
   const userId = req.user._id;
@@ -144,4 +124,4 @@ const getCurrentUser = (req, res) => {
 };
 
 
-module.exports = { createUser, getUser, login, updateUser, getCurrentUser };
+module.exports = { createUser, login, updateUser, getCurrentUser };
