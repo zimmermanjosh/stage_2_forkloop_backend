@@ -1,38 +1,48 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const User = require("../models/user");
-const { JWT_EXPIRATION_TIME } = require("../utils/config");
 
-mongoose.connect("mongodb://localhost:27017/wtwr_db", {
+mongoose.connect("mongodb://127.0.0.1:27017/wtwr_db", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 
-// not my code modified from the tutorial to create a user for demonstration purposes.
+// Set a proper salt rounds value (10 is common)
+const SALT_ROUNDS = 10;
 
 const seedUser = async () => {
-  const hashedPassword = await bcrypt.hash("mypassword123",  JWT_EXPIRATION_TIME,
-  );
+  try {
+    // Hash password with proper salt rounds
+    const hashedPassword = await bcrypt.hash("mypassword123", SALT_ROUNDS);
 
-  await User.create([
-    {
-      // _id: new mongoose.Types.ObjectId("673a687016619aa93deecaa1"), // Replace with your own unique ID generator
-      name: "joshtarget",
-      avatar: "https://example.com/joshtarget.jpg",
-      email: "joshtarget@example.com",
-      password: hashedPassword,
-    },
-    {
-      // _id: new mongoose.Types.ObjectId("673a687016619aa93deecaa1"), // Replace with your own unique ID generator
-      name: "josh1again",
-      avatar: "https://example.com/josh1again.jpg",
-      email: "josh1again@example.com",
-      password: hashedPassword,
-    },
-  ]);
-  // eslint-disable-next-line no-console
-  console.log("User added!");
-  mongoose.disconnect();
+    // Clear any existing users with these emails
+    await User.deleteMany({
+      email: { $in: ["joshtarget@example.com", "josh1again@example.com"] }
+    });
+
+    const users = await User.create([
+      {
+        name: "joshtarget",
+        avatar: "https://example.com/joshtarget.jpg",
+        email: "joshtarget@example.com",
+        password: hashedPassword,
+      },
+      {
+        name: "josh1again",
+        avatar: "https://example.com/josh1again.jpg",
+        email: "josh1again@example.com",
+        password: hashedPassword,
+      },
+    ]);
+
+    console.log("Users added successfully!");
+    console.log(`First user ID (for seedClothingItems.js): ${users[0]._id}`);
+
+  } catch (error) {
+    console.error("Error seeding users:", error);
+  } finally {
+    mongoose.disconnect();
+  }
 };
 
 seedUser();

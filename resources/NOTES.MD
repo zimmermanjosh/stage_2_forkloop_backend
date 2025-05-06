@@ -1,5 +1,21 @@
 # Need to seed user
 
+## steps
+```
+npm run -> gives you lost
+use this to seed users and db to test
+
+- nvm use
+- npm run prebuild
+- npm run db:start
+- npm run dev
+- npm run seeduser
+- npm run seedclothing
+
+```
+
+
+
 user doesnt exist in DB
 
 need to start somewhere
