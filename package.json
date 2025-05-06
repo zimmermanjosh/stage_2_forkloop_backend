@@ -10,7 +10,8 @@
     "lint": "npx eslint .",
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "seed": "node resources/seeduser.js",
+    "seedUser": "node resources/seeduser.js",
+    "seedClothing": "node resources/seedClothingitems.js",
     "db:start": "brew services start mongodb-community && mongosh",
     "db:stop": "brew services stop mongodb-community"
   },
