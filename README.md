@@ -10,6 +10,7 @@ Features include :
     - create routes and controllers for signing up and signing in
     - create routes and controllers for modifying the current user data
     - protect existing routes
+    - !! read the readme in [(seed data) ~/resources/readme.md>]
 
 ## Software Installation
 
