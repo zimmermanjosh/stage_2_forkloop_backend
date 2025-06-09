@@ -59,36 +59,74 @@ const createItem = (req, res) => {
 
 // Delete a clothing item
 const deleteItem = (req, res) => {
-  const { itemId } = req.params;
+    console.log("🗑️ DELETE CONTROLLER HIT!");
+    console.log("🗑️ Request params:", req.params);
+    console.log("🗑️ ItemId received:", req.params.itemId);
+    console.log("🗑️ ItemId type:", typeof req.params.itemId);
+    console.log("🗑️ ItemId length:", req.params.itemId?.length);
+    console.log("🗑️ ItemId as string:", JSON.stringify(req.params.itemId));
+    console.log("🗑️ User from auth:", req.user);
 
-  // Validate ID format first
-  if (!mongoose.Types.ObjectId.isValid(itemId)) {
-    return res.status(ERROR_CODES.BAD_REQUEST).send({
-      message: "Invalid ID format"
-    });
-  }
+    const { itemId } = req.params;
+
+    // More detailed validation debugging
+    console.log("🔍 Testing ObjectId validation:");
+    console.log("🔍 Raw itemId:", itemId);
+    console.log("🔍 mongoose.Types.ObjectId.isValid result:", mongoose.Types.ObjectId.isValid(itemId));
+
+    // Try creating ObjectId to see what happens
+    try {
+        const testObjectId = new mongoose.Types.ObjectId(itemId);
+        console.log("✅ Successfully created ObjectId:", testObjectId);
+    } catch (err) {
+        console.log("❌ Failed to create ObjectId:", err.message);
+    }
+
+    // Validate ID format first
+    if (!mongoose.Types.ObjectId.isValid(itemId)) {
+        console.log("❌ Invalid ObjectId format");
+        return res.status(ERROR_CODES.BAD_REQUEST).send({
+            message: "Invalid ID format"
+        });
+    }
+
+  console.log("✅ ObjectId validation passed");
 
   return ClothingItem.findById(itemId)
-    .orFail(() => {
-      const error = new Error("Item not found");
-      error.name = "DocumentNotFoundError";
-      throw error;
-    })
-    .then((item) => {
-      // Check if the current user is the owner of the item
-      if (item.owner.toString() !== req.user._id.toString()) {
-        return res.status(ERROR_CODES.FORBIDDEN).send({
-          message: "You are not authorized to delete this item"
-        });
-      }
+      .orFail(() => {
+        console.log("❌ Item not found in database");
+        const error = new Error("Item not found");
+        error.name = "DocumentNotFoundError";
+        throw error;
+      })
+      .then((item) => {
+        console.log("✅ Item found:", item._id);
+        console.log("🔍 Item owner:", item.owner.toString());
+        console.log("🔍 Current user:", req.user._id.toString());
+        console.log("🔍 Owner match:", item.owner.toString() === req.user._id.toString());
 
-      // If user is owner, proceed with deletion
-      return ClothingItem.findByIdAndDelete(itemId)
-        .then(() => res.status(ERROR_CODES.OK).send({ message: ERROR_MESSAGES.OK }));
-    })
-    .catch((err) => handleError(err, res));
+        // Check if the current user is the owner of the item
+        if (item.owner.toString() !== req.user._id.toString()) {
+          console.log("❌ User not authorized to delete");
+          return res.status(ERROR_CODES.FORBIDDEN).send({
+            message: "You are not authorized to delete this item"
+          });
+        }
+
+        console.log("✅ Authorization passed, proceeding with deletion");
+
+        // If user is owner, proceed with deletion
+        return ClothingItem.findByIdAndDelete(itemId)
+            .then(() => {
+              console.log("✅ Item deleted successfully");
+              res.status(ERROR_CODES.OK).send({ message: ERROR_MESSAGES.OK });
+            });
+      })
+      .catch((err) => {
+        console.log("❌ Error in deleteItem:", err.name, err.message);
+        handleError(err, res);
+      });
 };
-
 // Like a clothing item
 const likeItem = (req, res) => {
   const { itemId } = req.params;

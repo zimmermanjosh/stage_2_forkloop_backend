@@ -1,5 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
+mongoose.set('strictQuery', false);
+
 const cors = require("cors");
 const routes = require("./routes");
 const { login, createUser } = require("./controllers/users");
@@ -26,7 +28,10 @@ app.use(cors());
 // Public routes that don't need auth
 app.post("/signin", login);
 app.post("/signup", createUser);
-
+app.use((req, res, next) => {
+    console.log(`📍 App: ${req.method} ${req.originalUrl}`);
+    next();
+});
 // Apply auth middleware only to protected routes
 app.use("/users", routes.userRouter);
 app.use("/items", routes.clothingItem);
