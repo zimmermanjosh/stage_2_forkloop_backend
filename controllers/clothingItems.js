@@ -60,27 +60,7 @@ const createItem = (req, res) => {
 // Delete a clothing item
 const deleteItem = (req, res) => {
     console.log("🗑️ DELETE CONTROLLER HIT!");
-    console.log("🗑️ Request params:", req.params);
-    console.log("🗑️ ItemId received:", req.params.itemId);
-    console.log("🗑️ ItemId type:", typeof req.params.itemId);
-    console.log("🗑️ ItemId length:", req.params.itemId?.length);
-    console.log("🗑️ ItemId as string:", JSON.stringify(req.params.itemId));
-    console.log("🗑️ User from auth:", req.user);
-
     const { itemId } = req.params;
-
-    // More detailed validation debugging
-    console.log("🔍 Testing ObjectId validation:");
-    console.log("🔍 Raw itemId:", itemId);
-    console.log("🔍 mongoose.Types.ObjectId.isValid result:", mongoose.Types.ObjectId.isValid(itemId));
-
-    // Try creating ObjectId to see what happens
-    try {
-        const testObjectId = new mongoose.Types.ObjectId(itemId);
-        console.log("✅ Successfully created ObjectId:", testObjectId);
-    } catch (err) {
-        console.log("❌ Failed to create ObjectId:", err.message);
-    }
 
     // Validate ID format first
     if (!mongoose.Types.ObjectId.isValid(itemId)) {
@@ -90,42 +70,45 @@ const deleteItem = (req, res) => {
         });
     }
 
-  console.log("✅ ObjectId validation passed");
+    console.log("✅ ObjectId validation passed");
 
-  return ClothingItem.findById(itemId)
-      .orFail(() => {
-        console.log("❌ Item not found in database");
-        const error = new Error("Item not found");
-        error.name = "DocumentNotFoundError";
-        throw error;
-      })
-      .then((item) => {
-        console.log("✅ Item found:", item._id);
-        console.log("🔍 Item owner:", item.owner.toString());
-        console.log("🔍 Current user:", req.user._id.toString());
-        console.log("🔍 Owner match:", item.owner.toString() === req.user._id.toString());
+    return ClothingItem.findById(itemId)
+        .orFail(() => {
+            console.log("❌ Item not found in database");
+            const error = new Error("Item not found");
+            error.name = "DocumentNotFoundError";
+            throw error;
+        })
+        .then((item) => {
+            console.log("✅ Item found:", item._id);
+            console.log("🔍 Item owner:", item.owner.toString());
+            console.log("🔍 Current user:", req.user._id.toString());
 
-        // Check if the current user is the owner of the item
-        if (item.owner.toString() !== req.user._id.toString()) {
-          console.log("❌ User not authorized to delete");
-          return res.status(ERROR_CODES.FORBIDDEN).send({
-            message: "You are not authorized to delete this item"
-          });
-        }
+            // Check if the current user is the owner of the item
+            if (item.owner.toString() !== req.user._id.toString()) {
+                console.log("❌ User not authorized to delete");
+                return res.status(ERROR_CODES.FORBIDDEN).send({
+                    message: "You are not authorized to delete this item"
+                });
+            }
 
-        console.log("✅ Authorization passed, proceeding with deletion");
+            console.log("✅ Authorization passed, proceeding with deletion");
 
-        // If user is owner, proceed with deletion
-        return ClothingItem.findByIdAndDelete(itemId)
-            .then(() => {
-              console.log("✅ Item deleted successfully");
-              res.status(ERROR_CODES.OK).send({ message: ERROR_MESSAGES.OK });
-            });
-      })
-      .catch((err) => {
-        console.log("❌ Error in deleteItem:", err.name, err.message);
-        handleError(err, res);
-      });
+            // If user is owner, proceed with deletion
+            return ClothingItem.findByIdAndDelete(itemId)
+                .then((deletedItem) => {
+                    console.log("✅ Item deleted successfully");
+                    // Send back the deleted item data instead of just a message
+                    res.status(ERROR_CODES.OK).send({
+                        message: "Item deleted successfully",
+                        data: deletedItem
+                    });
+                });
+        })
+        .catch((err) => {
+            console.log("❌ Error in deleteItem:", err.name, err.message);
+            handleError(err, res);
+        });
 };
 // Like a clothing item
 const likeItem = (req, res) => {
