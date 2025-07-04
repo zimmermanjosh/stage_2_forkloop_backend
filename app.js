@@ -12,6 +12,7 @@ const app = express();
 const { PORT = 3001, BASE_PATH = "http://localhost" } = process.env;
 
 const { ERROR_CODES, ERROR_MESSAGES } = require("./utils/errors");
+const { errors } = require('celebrate');
 
 mongoose
   .connect("mongodb://127.0.0.1:27017/wtwr_db")
@@ -36,6 +37,9 @@ app.use((req, res, next) => {
 app.use("/users", routes.userRouter);
 app.use("/items", routes.clothingItem);
 
+// celebrate error handler
+app.use(errors());
+
 // 404 handler for undefined routes
 app.use((req, res) => {
   res.status(ERROR_CODES.NOT_FOUND).send({ message: ERROR_MESSAGES.NOT_FOUND });
@@ -45,3 +49,5 @@ app.listen(PORT, () => {
   // eslint-disable-next-line no-console
   console.log(`Server running on ${BASE_PATH}:${PORT}`);
 });
+
+
