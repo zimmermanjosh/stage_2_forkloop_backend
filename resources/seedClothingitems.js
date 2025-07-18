@@ -3,18 +3,6 @@ const mongoose = require('mongoose');
 const ClothingItem = require('../models/clothingItem');
 const User = require('../models/user');
 
-mongoose.connect('mongodb://127.0.0.1:27017/wtwr_db', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-  .then(() => {
-    console.log('Connected to MongoDB');
-    seedDatabase();
-  })
-  .catch((err) => {
-    console.error('Error connecting to MongoDB:', err);
-  });
-
 const clothingItems = [
   {
     "name": "Linen Shirt",
@@ -177,3 +165,15 @@ async function seedDatabase() {
     mongoose.disconnect();
   }
 }
+
+mongoose.connect('mongodb://127.0.0.1:27017/wtwr_db', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+  .then(() => {
+    console.log('Connected to MongoDB');
+    seedDatabase();
+  })
+  .catch((err) => {
+    console.error('Error connecting to MongoDB:', err);
+  });
