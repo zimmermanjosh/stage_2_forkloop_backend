@@ -3,6 +3,7 @@ const { errors } = require('celebrate');
 const mongoose = require("mongoose");
 const cors = require("cors");
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+require('dotenv').config();
 
 mongoose.set('strictQuery', false);
 
