@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 require('dotenv').config();
+const {DOMAIN_URL} = require('./utils/config');
 
 mongoose.set('strictQuery', false);
 
@@ -26,8 +27,12 @@ mongoose
     .catch((err) => console.error(err));
 
 app.use(express.json());
-app.use(cors());
-
+// fix dumb cors
+// app.use(cors());
+app.use(cors({
+    origin: [DOMAIN_URL, 'http://localhost:3000'],
+    credentials: true
+}));
 
 app.post("/signin", validateAuth, login);
 app.post("/signup", validateUserBody, createUser);

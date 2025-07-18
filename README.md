@@ -115,6 +115,9 @@ build resources and connect to mongoDB:
     npm run dev
     npm start
 ```
+## Avatar generator
+- https://i.pravatar.cc/300?img=12
+
 
 ## MongoDB
 
