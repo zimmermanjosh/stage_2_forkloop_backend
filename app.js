@@ -34,6 +34,12 @@ app.use(cors({
     credentials: true
 }));
 
+app.get('/crash-test', () => {
+    setTimeout(() => {
+        throw new Error('Server will crash now');
+    }, 0);
+});
+
 app.post("/signin", validateAuth, login);
 app.post("/signup", validateUserBody, createUser);
 

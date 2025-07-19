@@ -1,171 +1,211 @@
-# WTWR (What to Wear?): Back End
+# WTWR (What to Wear?): Backend API
 
-The back-end project is focused on creating a server for the WTWR application. You’ll gain a deeper understanding of how to work with databases, set up security and testing, and deploy web applications on a remote machine. The eventual goal is to create a server with an API and user authorization.
+A Node.js/Express backend server for the WTWR application with user authentication, clothing item management, and weather-based recommendations.
 
-## Sprint 14
+## 🌐 Live Application
 
-Features include :
+- **Frontend:** https://testwtwr.jumpingcrab.com
+- **Backend API:** https://api.testwtwr.jumpingcrab.com
 
-    - expand the user schema with an email and password
-    - create routes and controllers for signing up and signing in
-    - create routes and controllers for modifying the current user data
-    - protect existing routes
-    - !! read the readme in [(seed data) ~/resources/readme.md>]
+## 🚀 Quick Start
 
-## Software Installation
+### Prerequisites
+- Node.js (v22+)
+- MongoDB
+- Git
 
-## Running the Project
+### Installation
 
-`mongosh` — to launch the db
+```bash
+# Clone the repository
+git clone https://github.com/zimmermanjosh/se_project_express.git
+cd se_project_express
 
-`npm run pre-build` — clean and reinstall node modules
+# Install dependencies
+npm run prebuild
 
-`npm run dev` - start server and live debugging
+# Start MongoDB
+brew services start mongodb-community
 
-happy coding !!
+# Seed the database
+npm run seedUser
+npm run seedClothing
 
-### Testing
-
-Before committing your code, make sure you edit the file `sprint.txt` in the root folder.
-The file `sprint.txt` should contain the number of the sprint you're currently working on. For ex. 13
-
-### Component Structure
-
-```tree
-
-  ├── README.md
-  ├── app.js
-  ├── controllers
-  │   ├── clothingItems.js
-  │   └── users.js
-  ├── middlewares
-  │   ├── NOTES.MD
-  │   ├── auth.js
-  │   └── seeduser.js
-  ├── models
-  │   ├── clothingItem.js
-  │   └── user.js
-  ├── package-lock.json
-  ├── package.json
-  ├── routes
-  │   ├── clothingItems.js
-  │   ├── index.js
-  │   └── users.js
-  ├── sprint.txt
-  └── utils
-      ├── config.js
-      └── errors.js
+# Start development server
+npm run dev
 ```
 
-## npm commands
+## 📁 Project Structure
 
-[npm]
-
-```npm
-
-test
-    hello world
-
-start
-    node app.js
-
-clean_local
-    rm -rf node_modules && rm -rf .generated && rm -rf target && rm -rf package-lock.json
-
-prebuild
-    npm run clean_local && npm install
-
-permitScripts
-    chmod +x scripts/*
-
-nvmSelect
-    npm run permitScripts && sh scripts/nvmSelect.sh
-
-lint
-    npx eslint .
-
-dev
-    nodemon app.js
+```
+├.
+├── README.md
+├── app.js
+├── controllers
+│   ├── clothingItems.js
+│   └── users.js
+├── error.log
+├── middlewares
+│   ├── auth.js
+│   ├── logger.js
+│   └── validator.js
+├── models
+│   ├── clothingItem.js
+│   └── user.js
+├── package.json
+├── request.log
+├── resources
+│   ├── NOTES.MD
+│   ├── db.json
+│   ├── seedClothingitems.js
+│   └── seeduser.js
+├── routes
+│   ├── clothingItems.js
+│   ├── index.js
+│   └── users.js
+├── sprint.txt
+└── utils
+    ├── config.js
+    ├── cryptoGen.js
+    ├── errors.js
+    └── serverHelp.sh
 ```
 
-## Build steps
+## 🛠️ Available Scripts
 
-make a directory:
+| Command | Description |
+|---------|-------------|
+| `npm start` | Start production server |
+| `npm run dev` | Start development server with nodemon |
+| `npm run prebuild` | Clean install dependencies |
+| `npm run seedUser` | Seed database with test users |
+| `npm run seedClothing` | Seed database with clothing items |
+| `npm run lint` | Run ESLint |
+| `npm run db:start` | Start MongoDB and open shell |
+| `npm run db:stop` | Stop MongoDB |
 
-```terminal
-    cd {some directory} ie cd ~/Documents
-    mkdir Dev
+## 🗄️ Database Setup
+
+### Start MongoDB
+```bash
+# Start service
+brew services start mongodb-community
+
+# Verify it's running
+brew services list
+
+# Open MongoDB shell
+mongosh
 ```
 
-clone repo to local directory:
+### Seed Database
+```bash
+# Create test users
+npm run seedUser
 
-```terminal
-
-    cd Dev
-    git clone https://github.com/zimmermanjosh/se_project_express.git
+# Add clothing items
+npm run seedClothing
 ```
 
-build resources and connect to mongoDB:
+## 🔧 Environment Variables
 
-```terminal
+Create a `.env` file in the root directory:
 
-    cd se_project_express
-    npm run prebuild
-    npm run i
-    npm run dev
-    npm start
-```
-## Avatar generator
-- https://i.pravatar.cc/300?img=12
-
-
-## MongoDB
-
-status (on MBP from triple-ten "https://tripleten.com/trainer/web/lesson/1af73edb-bcae-4696-848e-2d42258d8369/?from=program")
-
-Check to see if MongoDb install:
-
-```terminal
-
-    mongod --version
+```env
+JWT_SECRET=your-super-secret-jwt-key
+JWT_EXPIRATION_TIME=7d
+NODE_ENV=development
 ```
 
-Start:
+## 📚 API Endpoints
 
-```terminal
+### Authentication
+- `POST /signin` - User login
+- `POST /signup` - User registration
 
-    brew services start mongodb-community@5.0
+### Users
+- `GET /users/me` - Get current user
+- `PATCH /users/me` - Update user profile
+
+### Clothing Items
+- `GET /items` - Get all clothing items
+- `POST /items` - Create new clothing item
+- `DELETE /items/:itemId` - Delete clothing item
+- `PUT /items/:itemId/likes` - Like item
+- `DELETE /items/:itemId/likes` - Unlike item
+
+## 🔒 Security Features
+
+- JWT-based authentication
+- Password hashing with bcrypt
+- Request validation with Joi/Celebrate
+- CORS protection
+- Environment variable protection
+
+## 📊 Logging & Monitoring
+
+- Request logging with Winston
+- Error logging and tracking
+- PM2 process management in production
+
+## 🚀 Deployment
+
+The application is deployed using:
+- **Server:** Google Cloud VM
+- **Process Manager:** PM2
+- **Web Server:** Nginx
+- **SSL:** Let's Encrypt certificates
+- **Database:** MongoDB
+
+## 🧪 Testing
+
+### Crash Recovery Test
+The application includes PM2 auto-recovery. Test with:
+```bash
+curl https://api.testwtwr.jumpingcrab.com/crash-test
 ```
 
-Verify MongoDB is running:
-
-```terminal
-
-    brew services list
+### Development Testing
+```bash
+# Test user credentials
+Email: joshtarget@example.com
+Password: mypassword123
 ```
 
-Stop:
+## 🛠️ Troubleshooting
 
-```terminal
+### MongoDB Issues
+```bash
+# Restart MongoDB
+brew services restart mongodb-community
 
-    brew services stop mongodb-community@5.0
+# Check status
+brew services list | grep mongodb
 ```
 
-Restart:
+### PM2 Issues
+```bash
+# Restart application
+pm2 restart app --update-env
 
-```terminal
+# View logs
+pm2 logs app
 
-    brew services restart mongodb-community@5.0
+# Check status
+pm2 status
 ```
 
-Begin using db:
+## 📝 Sprint Progress
 
-```terminal
+Currently on Sprint 15 - Full deployment with authentication and security features.
 
-    mongosh
-```
+## 🔗 Related Links
 
-## notes
+- [Avatar Generator]
+  - https://i.pravatar.cc/300?img=12
+- [Frontend Repository](https://github.com/zimmermanjosh/se_project_react)
 
-- .nvmrc file updated to use node 22
-- sprint 14 - updates tie api into front end
+---
+
+**Author:** Joshua Zimmerman  
+**License:** ISC
