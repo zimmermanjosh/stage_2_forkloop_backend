@@ -3,6 +3,8 @@ const { errors } = require('celebrate');
 const mongoose = require("mongoose");
 const cors = require("cors");
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const errorHandler = require('./middlewares/errorHandler');
+const { NotFoundError } = require('./utils/errors');
 require('dotenv').config();
 const {DOMAIN_URL} = require('./utils/config');
 
@@ -53,15 +55,13 @@ app.use("/items", routes.clothingItem);
 
 app.use(requestLogger);
 
-// app.use(routes);
-
-app.use(errorLogger); // enabling the error logger
-app.use(errors());
-
-
-app.use((req, res) => {
-    res.status(ERROR_CODES.NOT_FOUND).send({ message: ERROR_MESSAGES.NOT_FOUND });
+app.use((req, res, next) => {
+    next(new NotFoundError('Resource not found'));
 });
+
+app.use(errorLogger);
+app.use(errors());
+app.use(errorHandler);
 
 app.listen(PORT, () => {
     // eslint-disable-next-line no-console
