@@ -1,7 +1,6 @@
 const { Joi, celebrate } = require('celebrate');
 const validator = require('validator');
 
-// Custom URL validation function
 const validateURL = (value, helpers) => {
     if (validator.isURL(value)) {
         return value;
@@ -9,7 +8,6 @@ const validateURL = (value, helpers) => {
     return helpers.error('string.uri');
 };
 
-// 1. Validate clothing item body when creating an item
 module.exports.validateClothingItem = celebrate({
     body: Joi.object().keys({
         name: Joi.string().required().min(2).max(30).messages({
@@ -28,7 +26,6 @@ module.exports.validateClothingItem = celebrate({
     }),
 });
 
-// 2. Validate user info body when creating a user
 module.exports.validateUserBody = celebrate({
     body: Joi.object().keys({
         name: Joi.string().min(2).max(30).messages({
@@ -49,7 +46,6 @@ module.exports.validateUserBody = celebrate({
     }),
 });
 
-// 3. Validate authentication when user logs in
 module.exports.validateAuth = celebrate({
     body: Joi.object().keys({
         email: Joi.string().required().email().messages({
@@ -62,7 +58,6 @@ module.exports.validateAuth = celebrate({
     }),
 });
 
-// 4. Validate user and clothing item IDs (24-character hex)
 module.exports.validateId = celebrate({
     params: Joi.object().keys({
         itemId: Joi.string().hex().length(24).messages({
@@ -72,7 +67,6 @@ module.exports.validateId = celebrate({
     }),
 });
 
-// Alternative validator for user ID params
 module.exports.validateUserId = celebrate({
     params: Joi.object().keys({
         userId: Joi.string().hex().length(24).messages({
@@ -82,7 +76,6 @@ module.exports.validateUserId = celebrate({
     }),
 });
 
-// Validate user profile updates (name and avatar only)
 module.exports.validateUserUpdate = celebrate({
     body: Joi.object().keys({
         name: Joi.string().min(2).max(30).messages({
