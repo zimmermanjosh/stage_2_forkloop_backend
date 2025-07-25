@@ -1,16 +1,13 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const User = require("../models/user");
-const { JWT_SECRET } = require("../utils/config");
-const { ERROR_CODES, ERROR_MESSAGES } = require("../utils/errors");
-const { JWT_EXPIRATION_TIME } = require("../utils/config");
+const { JWT_SECRET, JWT_EXPIRATION_TIME } = require("../utils/config");
 const {
   BadRequestError,
   UnauthorizedError,
   NotFoundError,
   ConflictError
 } = require("../utils/errors");
-
 
 const login = async (req, res, next) => {
   try {
@@ -30,24 +27,6 @@ const login = async (req, res, next) => {
     }
     return next(err); // Pass any other errors to error handler
   }
-};
-
-const handleError = (err, res) => {
-  if (err.name === "ValidationError") {
-    return res
-      .status(ERROR_CODES.BAD_REQUEST)
-      .send({ message: ERROR_MESSAGES.BAD_REQUEST });
-  }
-
-  if (err.name === "DocumentNotFoundError") {
-    return res
-      .status(ERROR_CODES.NOT_FOUND)
-      .send({ message: ERROR_MESSAGES.NOT_FOUND });
-  }
-  // Default server error
-  return res
-    .status(ERROR_CODES.SERVER_ERROR)
-    .send({ message: ERROR_MESSAGES.SERVER_ERROR });
 };
 
 const createUser = async (req, res, next) => {
