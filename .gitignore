@@ -47,3 +47,4 @@ test
 
 *.ARCHIVES
 *.ZIP
+.env
