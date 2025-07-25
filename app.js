@@ -25,7 +25,11 @@ mongoose
 
 app.use(express.json());
 app.use(cors({
-    origin: [DOMAIN_URL, 'http://localhost:3000'],
+    origin: [
+        'https://testwtwr.jumpingcrab.com',      // Original domain
+        'https://www.testwtwr.jumpingcrab.com',  // With www subdomain
+        'http://localhost:3000'                  // Development
+    ],
     credentials: true
 }));
 
