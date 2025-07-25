@@ -1,56 +1,35 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const User = require("../models/user");
-const { JWT_SECRET } = require("../utils/config");
-const { ERROR_CODES, ERROR_MESSAGES } = require("../utils/errors");
-const { JWT_EXPIRATION_TIME } = require("../utils/config");
+const { JWT_SECRET, JWT_EXPIRATION_TIME } = require("../utils/config");
+const {
+  BadRequestError,
+  UnauthorizedError,
+  NotFoundError,
+  ConflictError
+} = require("../utils/errors");
 
-const login = async (req, res) => {
+const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
+
     if (!email || !password) {
-      return res
-        .status(ERROR_CODES.BAD_REQUEST)
-        .send({ message: ERROR_MESSAGES.BAD_REQUEST });
+      return next(new BadRequestError('Email and password are required'));
     }
+
     const user = await User.findUserByCredentials(email, password);
     const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: JWT_EXPIRATION_TIME });
+
     res.send({ token });
   } catch (err) {
-    // res.status(ERROR_CODES.UNAUTHORIZED).send({ message: ERROR_MESSAGES.UNAUTHORIZED });
     if (err.statusCode === 401) {
-      return res
-        .status(ERROR_CODES.UNAUTHORIZED)
-        .send({ message: ERROR_MESSAGES.UNAUTHORIZED });
+      return next(new UnauthorizedError('Incorrect email or password'));
     }
-      // Default server error
-      return res
-      .status(ERROR_CODES.SERVER_ERROR)
-      .send({ message: ERROR_MESSAGES.SERVER_ERROR });
+    return next(err); // Pass any other errors to error handler
   }
-  // Explicitly return undefined to satisfy ESLint
-  return res;
 };
 
-const handleError = (err, res) => {
-  if (err.name === "ValidationError") {
-    return res
-      .status(ERROR_CODES.BAD_REQUEST)
-      .send({ message: ERROR_MESSAGES.BAD_REQUEST });
-  }
-
-  if (err.name === "DocumentNotFoundError") {
-    return res
-      .status(ERROR_CODES.NOT_FOUND)
-      .send({ message: ERROR_MESSAGES.NOT_FOUND });
-  }
-  // Default server error
-  return res
-    .status(ERROR_CODES.SERVER_ERROR)
-    .send({ message: ERROR_MESSAGES.SERVER_ERROR });
-};
-
-const createUser = async (req, res) => {
+const createUser = async (req, res, next) => {
   try {
     const { name, avatar, email, password } = req.body;
 
@@ -64,64 +43,57 @@ const createUser = async (req, res) => {
 
     const userWithoutPassword = { ...user.toObject() };
     delete userWithoutPassword.password;
-    res.status(ERROR_CODES.CREATED).send(userWithoutPassword);
+
+    res.status(201).send(userWithoutPassword);
   } catch (err) {
     if (err.code === 11000) {
-      // MongoDB duplicate key error (email already exists)
-      return res.status(ERROR_CODES.CONFLICT).send({ message: ERROR_MESSAGES.CONFLICT });
+      return next(new ConflictError('Email already exists'));
     }
-
     if (err.name === 'ValidationError') {
-      return res.status(ERROR_CODES.BAD_REQUEST).send({ message: ERROR_MESSAGES.BAD_REQUEST });
+      return next(new BadRequestError('Invalid data passed'));
     }
-
-    return res.status(ERROR_CODES.SERVER_ERROR).send({ message: ERROR_MESSAGES.SERVER_ERROR });
+    return next(err); // Pass any other errors to error handler
   }
-    // Explicitly return undefined to satisfy ESLint
-  return res;
 };
 
-const updateUser = (req, res) => {
+const updateUser = (req, res, next) => {
   const { name, avatar } = req.body;
   const userId = req.user._id;
 
   User.findByIdAndUpdate(
-    userId,
-    { name, avatar },
-    { new: true, runValidators: true }
+      userId,
+      { name, avatar },
+      { new: true, runValidators: true }
   )
-    .orFail()
-    .then((user) => res.status(200).send(user))
-    .catch((err) => {
-      if (err.name === "ValidationError") {
-        return res
-          .status(ERROR_CODES.BAD_REQUEST)
-          .send({ message: ERROR_MESSAGES.BAD_REQUEST });
-      }
-      if (err.name === "CastError") {
-        return res
-          .status(ERROR_CODES.BAD_REQUEST)
-          .send({ message: "Invalid ID format." });
-      }
-      return handleError(err, res);
-    });
+      .orFail(() => {
+        throw new NotFoundError('User not found');
+      })
+      .then((user) => res.status(200).send(user))
+      .catch((err) => {
+        if (err.name === "ValidationError") {
+          return next(new BadRequestError('Invalid data passed'));
+        }
+        if (err.name === "CastError") {
+          return next(new BadRequestError('Invalid ID format'));
+        }
+        return next(err);
+      });
 };
 
-const getCurrentUser = (req, res) => {
+const getCurrentUser = (req, res, next) => {
   const userId = req.user._id;
 
   User.findById(userId)
-    .orFail()
-    .then((user) => res.status(200).send(user))
-    .catch((err) => {
-      if (err.name === "CastError") {
-        return res
-          .status(ERROR_CODES.BAD_REQUEST)
-          .send({ message: "Invalid ID format." });
-      }
-      return handleError(err, res);
-    });
+      .orFail(() => {
+        throw new NotFoundError('User not found');
+      })
+      .then((user) => res.status(200).send(user))
+      .catch((err) => {
+        if (err.name === "CastError") {
+          return next(new BadRequestError('Invalid ID format'));
+        }
+        return next(err);
+      });
 };
-
 
 module.exports = { createUser, login, updateUser, getCurrentUser };
