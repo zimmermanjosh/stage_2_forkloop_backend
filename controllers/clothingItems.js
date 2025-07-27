@@ -15,7 +15,6 @@ const createItem = (req, res, next) => {
         return next(new BadRequestError("Missing required fields: name, weather, imageUrl"));
     }
 
-    // Create the item and let Mongoose handle the schema validation
     return ClothingItem.create({ name, weather, imageUrl, owner })
         .then((item) => {
             // console.log("Item created successfully:", item);
@@ -30,7 +29,6 @@ const createItem = (req, res, next) => {
         });
 };
 
-// Get all clothing items
 const getItems = (req, res, next) =>
     ClothingItem.find({})
         .then((items) =>
@@ -38,12 +36,10 @@ const getItems = (req, res, next) =>
         )
         .catch(next);
 
-// Delete a clothing item
 const deleteItem = (req, res, next) => {
     console.log("🗑️ DELETE CONTROLLER HIT!");
     const { itemId } = req.params;
 
-    // Validate ID format first
     if (!mongoose.Types.ObjectId.isValid(itemId)) {
         console.log("❌ Invalid ObjectId format");
         return next(new BadRequestError("Invalid ID format"));
