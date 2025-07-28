@@ -7,7 +7,7 @@ const {
   UnauthorizedError,
   NotFoundError,
   ConflictError
-} = require("../utils/errors");
+} = require("../utils/errors/index");
 
 const login = async (req, res, next) => {
   try {

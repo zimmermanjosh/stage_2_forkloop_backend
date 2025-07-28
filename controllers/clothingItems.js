@@ -4,7 +4,7 @@ const {
     BadRequestError,
     ForbiddenError,
     NotFoundError
-} = require("../utils/errors");
+} = require("../utils/errors/index");
 
 const createItem = (req, res, next) => {
     const { name, weather, imageUrl } = req.body;
