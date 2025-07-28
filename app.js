@@ -5,11 +5,11 @@ const cors = require("cors");
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const errorHandler = require('./middlewares/errorHandler');
 require('dotenv').config();
-const {DOMAIN_URL} = require('./utils/config');
 
 mongoose.set('strictQuery', false);
 
-const routes = require("./routes"); // This imports the centralized routes
+const routes = require("./routes");
+
 const { login, createUser } = require("./controllers/users");
 const { validateAuth, validateUserBody } = require("./middlewares/validator");
 
@@ -49,8 +49,8 @@ app.post("/signup", validateUserBody, createUser);
 app.use(routes);
 
 app.use(errorLogger);
-app.use(errors()); // Celebrate error handler
-app.use(errorHandler); // Your custom error handler (MUST be last!)
+app.use(errors());
+app.use(errorHandler);
 
 app.listen(PORT, () => {
     console.log(`Server running on ${BASE_PATH}:${PORT}`);

@@ -20,7 +20,7 @@ const login = async (req, res, next) => {
     const user = await User.findUserByCredentials(email, password);
     const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: JWT_EXPIRATION_TIME });
 
-    res.send({ token });
+    return res.send({ token });
   } catch (err) {
     if (err.statusCode === 401) {
       return next(new UnauthorizedError('Incorrect email or password'));
@@ -44,7 +44,7 @@ const createUser = async (req, res, next) => {
     const userWithoutPassword = { ...user.toObject() };
     delete userWithoutPassword.password;
 
-    res.status(201).send(userWithoutPassword);
+    return res.status(201).send(userWithoutPassword);
   } catch (err) {
     if (err.code === 11000) {
       return next(new ConflictError('Email already exists'));
