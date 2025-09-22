@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const User = require("../models/user");
 
-mongoose.connect("mongodb://127.0.0.1:27017/wtwr_db", {
+mongoose.connect("mongodb://127.0.0.1:27017/forkloop_db", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -23,13 +23,13 @@ const seedUser = async () => {
     const users = await User.create([
       {
         name: "joshtarget",
-        avatar: "https://example.com/joshtarget.jpg",
+        avatar: "https://i.pravatar.cc/300?img=55",
         email: "joshtarget@example.com",
         password: hashedPassword,
       },
       {
         name: "josh1again",
-        avatar: "https://example.com/josh1again.jpg",
+        avatar: "https://i.pravatar.cc/300?img=65",
         email: "josh1again@example.com",
         password: hashedPassword,
       },

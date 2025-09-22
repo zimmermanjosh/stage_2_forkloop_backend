@@ -7,6 +7,10 @@ const {
 } = require("../utils/errors/index");
 
 const createRecipe = (req, res, next) => {
+  console.log("🔧 CREATE RECIPE CONTROLLER HIT");
+  console.log("🔧 Request body:", JSON.stringify(req.body, null, 2));
+  console.log("🔧 User from JWT:", req.user);
+
   const {
     title,
     category,
@@ -14,25 +18,50 @@ const createRecipe = (req, res, next) => {
     cookingTime,
     difficulty,
     servings,
-    summary,
+    summary: rawSummary,
     extendedIngredients,
     dishTypes,
     sourceUrl,
     spoonacularScore,
   } = req.body;
+
+  // Truncate summary to ensure it doesn't exceed MongoDB limit
+  const summary = rawSummary ? rawSummary.substring(0, 1000) : undefined;
+
+  // Fix truncated image URLs that end with just a period
+  const fixImageUrl = (url) => {
+    if (!url) return url;
+    if (url.endsWith('.') && !url.endsWith('.jpg') && !url.endsWith('.png') && !url.endsWith('.jpeg')) {
+      return url + 'jpg';
+    }
+    return url;
+  };
+  const fixedImage = fixImageUrl(image);
+
   const owner = req.user._id;
+
+  console.log("🔧 Extracted fields:");
+  console.log("  - title:", title);
+  console.log("  - category:", category);
+  console.log("  - image (original):", image);
+  console.log("  - image (fixed):", fixedImage);
+  console.log("  - summary length:", summary ? summary.length : "undefined");
+  console.log("  - owner:", owner);
 
   // Manual validation for required fields
   if (!title || !category || !image) {
+    console.log("❌ Missing required fields validation failed");
     return next(
       new BadRequestError("Missing required fields: title, category, image"),
     );
   }
 
+  console.log("✅ Required fields validation passed");
+
   return Recipe.create({
     title,
     category,
-    image,
+    image: fixedImage,
     cookingTime,
     difficulty,
     servings,
@@ -44,10 +73,17 @@ const createRecipe = (req, res, next) => {
     owner,
   })
     .then((recipe) => {
+      console.log("✅ Recipe created successfully:", recipe._id);
       res.status(201).send({ data: recipe });
     })
     .catch((err) => {
+      console.log("❌ Recipe creation failed:");
+      console.log("  - Error name:", err.name);
+      console.log("  - Error message:", err.message);
+      console.log("  - Full error:", err);
+
       if (err.name === "ValidationError") {
+        console.log("  - Validation errors:", err.errors);
         return next(new BadRequestError("Invalid data passed"));
       }
       return next(err);

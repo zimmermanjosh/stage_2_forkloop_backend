@@ -2,9 +2,12 @@ const { Joi, celebrate } = require("celebrate");
 const validator = require("validator");
 
 const validateURL = (value, helpers) => {
+  console.log("🔧 VALIDATING URL:", value);
   if (validator.isURL(value)) {
+    console.log("✅ URL validation passed");
     return value;
   }
+  console.log("❌ URL validation failed");
   return helpers.error("string.uri");
 };
 
