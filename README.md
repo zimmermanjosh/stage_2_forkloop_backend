@@ -10,6 +10,7 @@ A Node.js/Express backend server for the WTWR application with user authenticati
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - Node.js (v22+)
 - MongoDB
 - Git
@@ -73,20 +74,21 @@ npm run dev
 
 ## 🛠️ Available Scripts
 
-| Command | Description |
-|---------|-------------|
-| `npm start` | Start production server |
-| `npm run dev` | Start development server with nodemon |
-| `npm run prebuild` | Clean install dependencies |
-| `npm run seedUser` | Seed database with test users |
-| `npm run seedClothing` | Seed database with clothing items |
-| `npm run lint` | Run ESLint |
-| `npm run db:start` | Start MongoDB and open shell |
-| `npm run db:stop` | Stop MongoDB |
+| Command                | Description                           |
+| ---------------------- | ------------------------------------- |
+| `npm start`            | Start production server               |
+| `npm run dev`          | Start development server with nodemon |
+| `npm run prebuild`     | Clean install dependencies            |
+| `npm run seedUser`     | Seed database with test users         |
+| `npm run seedClothing` | Seed database with clothing items     |
+| `npm run lint`         | Run ESLint                            |
+| `npm run db:start`     | Start MongoDB and open shell          |
+| `npm run db:stop`      | Stop MongoDB                          |
 
 ## 🗄️ Database Setup
 
 ### Start MongoDB
+
 ```bash
 # Start service
 brew services start mongodb-community
@@ -99,6 +101,7 @@ mongosh
 ```
 
 ### Seed Database
+
 ```bash
 # Create test users
 npm run seedUser
@@ -120,14 +123,17 @@ NODE_ENV=development
 ## 📚 API Endpoints
 
 ### Authentication
+
 - `POST /signin` - User login
 - `POST /signup` - User registration
 
 ### Users
+
 - `GET /users/me` - Get current user
 - `PATCH /users/me` - Update user profile
 
 ### Clothing Items
+
 - `GET /items` - Get all clothing items
 - `POST /items` - Create new clothing item
 - `DELETE /items/:itemId` - Delete clothing item
@@ -151,6 +157,7 @@ NODE_ENV=development
 ## 🚀 Deployment
 
 The application is deployed using:
+
 - **Server:** Google Cloud VM
 - **Process Manager:** PM2
 - **Web Server:** Nginx
@@ -160,12 +167,15 @@ The application is deployed using:
 ## 🧪 Testing
 
 ### Crash Recovery Test
+
 The application includes PM2 auto-recovery. Test with:
+
 ```bash
 curl https://api.testwtwr.jumpingcrab.com/crash-test
 ```
 
 ### Development Testing
+
 ```bash
 # Test user credentials
 Email: joshtarget@example.com
@@ -175,6 +185,7 @@ Password: mypassword123
 ## 🛠️ Troubleshooting
 
 ### MongoDB Issues
+
 ```bash
 # Restart MongoDB
 brew services restart mongodb-community
@@ -184,6 +195,7 @@ brew services list | grep mongodb
 ```
 
 ### PM2 Issues
+
 ```bash
 # Restart application
 pm2 restart app --update-env

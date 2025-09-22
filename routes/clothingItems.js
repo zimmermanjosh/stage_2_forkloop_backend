@@ -1,15 +1,17 @@
 const router = require("express").Router();
-const auth = require('../middlewares/auth');
-const { validateClothingItem, validateId } = require('../middlewares/validator');
+const auth = require("../middlewares/auth");
+const {
+  validateClothingItem,
+  validateId,
+} = require("../middlewares/validator");
 
 const {
-    createItem,
-    getItems,
-    deleteItem,
-    likeItem,
-    dislikeItem,
+  createItem,
+  getItems,
+  deleteItem,
+  likeItem,
+  dislikeItem,
 } = require("../controllers/clothingItems");
-
 
 router.post("/", auth, validateClothingItem, createItem); // Validate clothing item data
 router.get("/", getItems); // No validation needed for getting all items

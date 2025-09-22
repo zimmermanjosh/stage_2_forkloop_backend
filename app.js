@@ -1,12 +1,12 @@
 const express = require("express");
-const { errors } = require('celebrate');
+const { errors } = require("celebrate");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const { requestLogger, errorLogger } = require('./middlewares/logger');
-const errorHandler = require('./middlewares/errorHandler');
-require('dotenv').config();
+const { requestLogger, errorLogger } = require("./middlewares/logger");
+const errorHandler = require("./middlewares/errorHandler");
+require("dotenv").config();
 
-mongoose.set('strictQuery', false);
+mongoose.set("strictQuery", false);
 
 const routes = require("./routes");
 
@@ -17,29 +17,31 @@ const app = express();
 const { PORT = 3001, BASE_PATH = "http://localhost" } = process.env;
 
 mongoose
-    .connect("mongodb://127.0.0.1:27017/wtwr_db")
-    .then(() => {
-        console.log("Connected to MongoDB");
-    })
-    .catch((err) => console.error(err));
+  .connect("mongodb://127.0.0.1:27017/wtwr_db")
+  .then(() => {
+    console.log("Connected to MongoDB");
+  })
+  .catch((err) => console.error(err));
 
 app.use(express.json());
-app.use(cors({
+app.use(
+  cors({
     origin: [
-        'https://testwtwr.jumpingcrab.com',      // Original domain
-        'https://www.testwtwr.jumpingcrab.com',  // With www subdomain
-        'http://localhost:3000'                  // Development
+      "https://testwtwr.jumpingcrab.com", // Original domain
+      "https://www.testwtwr.jumpingcrab.com", // With www subdomain
+      "http://localhost:3000", // Development
     ],
-    credentials: true
-}));
+    credentials: true,
+  }),
+);
 
 // Place requestLogger BEFORE all routes
 app.use(requestLogger);
 
-app.get('/crash-test', () => {
-    setTimeout(() => {
-        throw new Error('Server will crash now');
-    }, 0);
+app.get("/crash-test", () => {
+  setTimeout(() => {
+    throw new Error("Server will crash now");
+  }, 0);
 });
 
 app.post("/signin", validateAuth, login);
@@ -53,5 +55,5 @@ app.use(errors());
 app.use(errorHandler);
 
 app.listen(PORT, () => {
-    console.log(`Server running on ${BASE_PATH}:${PORT}`);
+  console.log(`Server running on ${BASE_PATH}:${PORT}`);
 });
