@@ -49,4 +49,5 @@ test
 *.ZIP
 .env
 
-claudeConfig.md
+CLAUDE.md
+/Users/mrfancypants/Development/stage_2_forkloop_backend/resources/src/FRONTEND_WORK_SUMMARY.md
