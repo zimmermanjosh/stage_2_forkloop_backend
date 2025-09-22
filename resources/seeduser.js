@@ -17,7 +17,7 @@ const seedUser = async () => {
 
     // Clear any existing users with these emails
     await User.deleteMany({
-      email: { $in: ["joshtarget@example.com", "josh1again@example.com"] }
+      email: { $in: ["joshtarget@example.com", "josh1again@example.com"] },
     });
 
     const users = await User.create([
@@ -37,7 +37,6 @@ const seedUser = async () => {
 
     console.log("Users added successfully!");
     console.log(`First user ID (for seedClothingItems.js): ${users[0]._id}`);
-
   } catch (error) {
     console.error("Error seeding users:", error);
   } finally {

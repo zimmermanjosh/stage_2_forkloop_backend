@@ -48,3 +48,6 @@ test
 *.ARCHIVES
 *.ZIP
 .env
+
+CLAUDE.md
+/resources/src/FRONTEND_WORK_SUMMARY.md

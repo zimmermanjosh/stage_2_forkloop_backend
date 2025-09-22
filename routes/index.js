@@ -8,7 +8,7 @@ router.use("/items", clothingItem);
 
 // Handle unknown routes
 router.use((req, res, next) => {
-  next(new NotFoundError('Resource not found'));
+  next(new NotFoundError("Resource not found"));
 });
 
 // Export the main router (not an object)
