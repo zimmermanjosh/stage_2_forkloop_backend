@@ -1,10 +1,10 @@
 const router = require("express").Router();
 const userRouter = require("./users");
-const clothingItem = require("./clothingItems");
+const recipeRouter = require("./recipes");
 const { NotFoundError } = require("../utils/errors");
 
 router.use("/users", userRouter);
-router.use("/items", clothingItem);
+router.use("/recipes", recipeRouter);
 
 // Handle unknown routes
 router.use((req, res, next) => {

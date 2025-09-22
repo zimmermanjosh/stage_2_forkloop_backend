@@ -17,7 +17,7 @@ const app = express();
 const { PORT = 3001, BASE_PATH = "http://localhost" } = process.env;
 
 mongoose
-  .connect("mongodb://127.0.0.1:27017/wtwr_db")
+  .connect("mongodb://127.0.0.1:27017/forkloop_db")
   .then(() => {
     console.log("Connected to MongoDB");
   })
@@ -27,8 +27,7 @@ app.use(express.json());
 app.use(
   cors({
     origin: [
-      "https://testwtwr.jumpingcrab.com", // Original domain
-      "https://www.testwtwr.jumpingcrab.com", // With www subdomain
+      "https://zimmermanjosh.github.io", // Frontend deployment
       "http://localhost:3000", // Development
     ],
     credentials: true,

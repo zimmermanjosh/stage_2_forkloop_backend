@@ -1,17 +1,17 @@
-# WTWR (What to Wear?): Backend API
+# ForkLoop Backend API
 
-A Node.js/Express backend server for the WTWR application with user authentication, clothing item management, and weather-based recommendations.
+A Node.js/Express backend server for ForkLoop - Smart Recipe Discovery & Meal Planning application with user authentication, recipe collection management, and personalized recommendations.
 
 ## 🌐 Live Application
 
-- **Frontend:** https://testwtwr.jumpingcrab.com
-- **Backend API:** https://api.testwtwr.jumpingcrab.com
+- **Frontend:** https://zimmermanjosh.github.io/stage_1_forkloop_frontend
+- **Backend API:** To be deployed
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 
-- Node.js (v22+)
+- Node.js (v18+)
 - MongoDB
 - Git
 
@@ -19,8 +19,8 @@ A Node.js/Express backend server for the WTWR application with user authenticati
 
 ```bash
 # Clone the repository
-git clone https://github.com/zimmermanjosh/se_project_express.git
-cd se_project_express
+git clone https://github.com/zimmermanjosh/stage_2_forkloop_backend.git
+cd stage_2_forkloop_backend
 
 # Install dependencies
 npm run prebuild
@@ -30,7 +30,7 @@ brew services start mongodb-community
 
 # Seed the database
 npm run seedUser
-npm run seedClothing
+npm run seedRecipes
 
 # Start development server
 npm run dev
@@ -39,37 +39,33 @@ npm run dev
 ## 📁 Project Structure
 
 ```
-├.
 ├── README.md
 ├── app.js
 ├── controllers
-│   ├── clothingItems.js
-│   └── users.js
-├── error.log
+│   ├── recipes.js
+│   └── users.js
 ├── middlewares
-│   ├── auth.js
-│   ├── logger.js
-│   └── validator.js
+│   ├── auth.js
+│   ├── errorHandler.js
+│   ├── logger.js
+│   └── validator.js
 ├── models
-│   ├── clothingItem.js
-│   └── user.js
+│   ├── recipe.js
+│   └── user.js
 ├── package.json
-├── request.log
 ├── resources
-│   ├── NOTES.MD
-│   ├── db.json
-│   ├── seedClothingitems.js
-│   └── seeduser.js
+│   ├── FRONTEND_WORK_SUMMARY.md
+│   ├── seedRecipes.js
+│   └── seeduser.js
 ├── routes
-│   ├── clothingItems.js
-│   ├── index.js
-│   └── users.js
+│   ├── index.js
+│   ├── recipes.js
+│   └── users.js
 ├── sprint.txt
 └── utils
     ├── config.js
     ├── cryptoGen.js
-    ├── errors.js
-    └── serverHelp.sh
+    └── errors/
 ```
 
 ## 🛠️ Available Scripts
@@ -80,7 +76,7 @@ npm run dev
 | `npm run dev`          | Start development server with nodemon |
 | `npm run prebuild`     | Clean install dependencies            |
 | `npm run seedUser`     | Seed database with test users         |
-| `npm run seedClothing` | Seed database with clothing items     |
+| `npm run seedRecipes`  | Seed database with sample recipes     |
 | `npm run lint`         | Run ESLint                            |
 | `npm run db:start`     | Start MongoDB and open shell          |
 | `npm run db:stop`      | Stop MongoDB                          |
@@ -106,8 +102,8 @@ mongosh
 # Create test users
 npm run seedUser
 
-# Add clothing items
-npm run seedClothing
+# Add sample recipes
+npm run seedRecipes
 ```
 
 ## 🔧 Environment Variables
@@ -118,6 +114,9 @@ Create a `.env` file in the root directory:
 JWT_SECRET=your-super-secret-jwt-key
 JWT_EXPIRATION_TIME=7d
 NODE_ENV=development
+MONGODB_URI=mongodb://127.0.0.1:27017/forkloop_db
+PORT=3001
+CORS_ORIGIN=https://zimmermanjosh.github.io
 ```
 
 ## 📚 API Endpoints
@@ -132,13 +131,14 @@ NODE_ENV=development
 - `GET /users/me` - Get current user
 - `PATCH /users/me` - Update user profile
 
-### Clothing Items
+### Recipes
 
-- `GET /items` - Get all clothing items
-- `POST /items` - Create new clothing item
-- `DELETE /items/:itemId` - Delete clothing item
-- `PUT /items/:itemId/likes` - Like item
-- `DELETE /items/:itemId/likes` - Unlike item
+- `GET /recipes` - Get all recipes
+- `POST /recipes` - Add recipe to user's collection
+- `DELETE /recipes/:recipeId` - Remove recipe from collection
+- `GET /recipes/user/:userId` - Get recipes by specific user
+- `PUT /recipes/:recipeId/likes` - Like recipe
+- `DELETE /recipes/:recipeId/likes` - Unlike recipe
 
 ## 🔒 Security Features
 
@@ -148,31 +148,70 @@ NODE_ENV=development
 - CORS protection
 - Environment variable protection
 
+## 📊 Data Models
+
+### User Schema
+```javascript
+{
+  _id: ObjectId,
+  name: String,
+  email: String (unique),
+  password: String (hashed),
+  avatar: String,
+  createdAt: Date
+}
+```
+
+### Recipe Schema
+```javascript
+{
+  _id: ObjectId,
+  owner: ObjectId (ref: User),
+  title: String,
+  category: String (breakfast/lunch/dinner/snack),
+  image: String,
+  cookingTime: Number,
+  difficulty: String (easy/medium/hard),
+  servings: Number,
+  summary: String,
+  extendedIngredients: Array,
+  dishTypes: Array,
+  sourceUrl: String,
+  spoonacularScore: Number,
+  liked: Boolean,
+  createdAt: Date
+}
+```
+
+## 🌐 Frontend Integration
+
+The backend is designed to work with the ForkLoop React frontend. To connect:
+
+1. Update frontend API configuration to point to this backend
+2. Disable mock authentication in frontend
+3. Update CORS settings for production deployment
+
+### Frontend API Integration Points
+- `src/utils/auth.jsx` - Replace mock functions with real API calls
+- `src/utils/api.jsx` - Add backend endpoint configurations  
+- `src/utils/config.jsx` - Update API URLs for production
+
 ## 📊 Logging & Monitoring
 
 - Request logging with Winston
 - Error logging and tracking
-- PM2 process management in production
+- Console logging for development debugging
 
 ## 🚀 Deployment
 
-The application is deployed using:
-
-- **Server:** Google Cloud VM
+Recommended deployment stack:
+- **Server:** Cloud VM (Google Cloud, AWS, DigitalOcean)
 - **Process Manager:** PM2
 - **Web Server:** Nginx
 - **SSL:** Let's Encrypt certificates
-- **Database:** MongoDB
+- **Database:** MongoDB Atlas or self-hosted MongoDB
 
 ## 🧪 Testing
-
-### Crash Recovery Test
-
-The application includes PM2 auto-recovery. Test with:
-
-```bash
-curl https://api.testwtwr.jumpingcrab.com/crash-test
-```
 
 ### Development Testing
 
@@ -181,6 +220,14 @@ curl https://api.testwtwr.jumpingcrab.com/crash-test
 Email: joshtarget@example.com
 Password: mypassword123
 ```
+
+### API Testing
+
+Use tools like Postman or Thunder Client to test endpoints:
+
+1. Register/Login to get JWT token
+2. Use token in Authorization header for protected routes
+3. Test recipe CRUD operations
 
 ## 🛠️ Troubleshooting
 
@@ -192,32 +239,46 @@ brew services restart mongodb-community
 
 # Check status
 brew services list | grep mongodb
+
+# Connect to database
+mongosh forkloop_db
 ```
 
-### PM2 Issues
+### Common Issues
 
-```bash
-# Restart application
-pm2 restart app --update-env
+1. **Port 3001 in use**: Change PORT in .env file
+2. **MongoDB connection failed**: Ensure MongoDB is running
+3. **CORS errors**: Update CORS origin in app.js
+4. **JWT errors**: Check JWT_SECRET in .env file
 
-# View logs
-pm2 logs app
+## 📝 Project Status
 
-# Check status
-pm2 status
-```
+**Stage 2 Backend Development** - Transforming WTWR backend to ForkLoop
 
-## 📝 Sprint Progress
+### Completed ✅
+- Express server setup with middleware
+- MongoDB connection with Mongoose
+- User authentication system
+- Recipe data models and schemas
+- CRUD operations for recipes
+- Request validation and error handling
+- Sample data seeding scripts
 
-Currently on Sprint 15 - Full deployment with authentication and security features.
+### Next Steps 🔄
+- Frontend integration testing
+- Production deployment setup
+- API documentation with Swagger
+- Performance optimization
+- Unit and integration tests
 
 ## 🔗 Related Links
 
-- [Avatar Generator]
-  - https://i.pravatar.cc/300?img=12
-- [Frontend Repository](https://github.com/zimmermanjosh/se_project_react)
+- [Frontend Repository](https://github.com/zimmermanjosh/stage_1_forkloop_frontend)
+- [Frontend Live Demo](https://zimmermanjosh.github.io/stage_1_forkloop_frontend)
+- [Frontend Work Summary](./resources/FRONTEND_WORK_SUMMARY.md)
 
 ---
 
 **Author:** Joshua Zimmerman  
-**License:** ISC
+**License:** ISC  
+**Project:** ForkLoop - Stage 2 MERN Stack Backend

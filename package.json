@@ -1,7 +1,7 @@
 {
-  "name": "se_project_express",
-  "version": "13.0.0",
-  "description": "MERN Stack project sprint 13 project 13 node express",
+  "name": "forkloop-backend",
+  "version": "1.0.0",
+  "description": "ForkLoop Backend API - Smart Recipe Discovery & Meal Planning MERN Stack Application",
   "main": "app.js",
   "scripts": {
     "test": "echo \"No tests specified\" && exit 0",
@@ -11,18 +11,22 @@
     "start": "node app.js",
     "dev": "nodemon app.js",
     "seedUser": "node resources/seeduser.js",
-    "seedClothing": "node resources/seedClothingitems.js",
+    "seedRecipes": "node resources/seedRecipes.js",
     "db:start": "brew services start mongodb-community && mongosh",
     "db:stop": "brew services stop mongodb-community"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/zimmermanjosh/se_project_express.git"
+    "url": "https://github.com/zimmermanjosh/stage_2_forkloop_backend.git"
   },
   "keywords": [
-    "SE",
-    "Project",
-    "express"
+    "ForkLoop",
+    "Recipe",
+    "MERN",
+    "Backend",
+    "API",
+    "MongoDB",
+    "Express"
   ],
   "author": "JBZ",
   "license": "ISC",
