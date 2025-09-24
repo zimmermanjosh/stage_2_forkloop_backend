@@ -14,7 +14,7 @@ const auth = (req, res, next) => {
   }
 
   const token = authorization.replace("Bearer ", "");
-  console.log("🔧 Token extracted:", token.substring(0, 20) + "...");
+  console.log("🔧 Token extracted:", `${token.substring(0, 20)  }...`);
 
   let payload;
   try {

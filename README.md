@@ -119,26 +119,35 @@ PORT=3001
 CORS_ORIGIN=https://zimmermanjosh.github.io
 ```
 
+### Port Configuration
+
+**Note:** This backend runs on **port 3001** instead of the standard 3000 to avoid conflicts with the React frontend development server, which traditionally uses port 3000. This allows both frontend and backend to run simultaneously during development without port conflicts.
+
+- **Backend API**: http://localhost:3001
+- **Frontend Dev Server**: http://localhost:3000
+
 ## 📚 API Endpoints
+
+All API endpoints are prefixed with `/api` for proper API structure.
 
 ### Authentication
 
-- `POST /signin` - User login
-- `POST /signup` - User registration
+- `POST /api/signin` - User login
+- `POST /api/signup` - User registration
 
 ### Users
 
-- `GET /users/me` - Get current user
-- `PATCH /users/me` - Update user profile
+- `GET /api/users/me` - Get current user
+- `PATCH /api/users/me` - Update user profile
 
 ### Recipes
 
-- `GET /recipes` - Get all recipes
-- `POST /recipes` - Add recipe to user's collection
-- `DELETE /recipes/:recipeId` - Remove recipe from collection
-- `GET /recipes/user/:userId` - Get recipes by specific user
-- `PUT /recipes/:recipeId/likes` - Like recipe
-- `DELETE /recipes/:recipeId/likes` - Unlike recipe
+- `GET /api/recipes` - Get all recipes
+- `POST /api/recipes` - Add recipe to user's collection
+- `DELETE /api/recipes/:recipeId` - Remove recipe from collection
+- `GET /api/recipes/user/:userId` - Get recipes by specific user
+- `PUT /api/recipes/:recipeId/likes` - Like recipe
+- `DELETE /api/recipes/:recipeId/likes` - Unlike recipe
 
 ## 🔒 Security Features
 
@@ -204,12 +213,67 @@ The backend is designed to work with the ForkLoop React frontend. To connect:
 
 ## 🚀 Deployment
 
-Recommended deployment stack:
+### Production Environment Setup
+
+1. **Environment Variables for Production:**
+```env
+NODE_ENV=production
+PORT=3001
+MONGODB_URI=mongodb://your-production-mongo-url/forkloop_db
+JWT_SECRET=your-super-secure-production-jwt-secret
+JWT_EXPIRATION_TIME=7d
+BASE_PATH=https://your-domain.com
+CORS_ORIGIN=https://zimmermanjosh.github.io
+```
+
+2. **Recommended Deployment Stack:**
 - **Server:** Cloud VM (Google Cloud, AWS, DigitalOcean)
-- **Process Manager:** PM2
-- **Web Server:** Nginx
-- **SSL:** Let's Encrypt certificates
-- **Database:** MongoDB Atlas or self-hosted MongoDB
+- **Process Manager:** PM2 for production process management
+- **Web Server:** Nginx as reverse proxy with SSL termination
+- **SSL:** Let's Encrypt certificates for HTTPS
+- **Database:** MongoDB Atlas or self-hosted MongoDB with authentication
+
+3. **PM2 Setup:**
+```bash
+# Install PM2 globally
+npm install -g pm2
+
+# Start the application with PM2
+pm2 start app.js --name "forkloop-backend"
+
+# Auto-restart on server reboot
+pm2 startup
+pm2 save
+```
+
+4. **Nginx Configuration Example:**
+```nginx
+server {
+    listen 80;
+    server_name your-domain.com;
+    return 301 https://$server_name$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    server_name your-domain.com;
+    
+    ssl_certificate /path/to/your/certificate.crt;
+    ssl_certificate_key /path/to/your/private.key;
+    
+    location / {
+        proxy_pass http://localhost:3001;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+```
 
 ## 🧪 Testing
 

@@ -32,7 +32,7 @@ const createRecipe = (req, res, next) => {
   const fixImageUrl = (url) => {
     if (!url) return url;
     if (url.endsWith('.') && !url.endsWith('.jpg') && !url.endsWith('.png') && !url.endsWith('.jpeg')) {
-      return url + 'jpg';
+      return `${url  }jpg`;
     }
     return url;
   };
